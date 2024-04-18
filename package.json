@@ -16,6 +16,10 @@
       {
         "command": "fellowed.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "fellowed.scrollToLine",
+        "title": "Scroll to Line"
       }
     ]
   },
