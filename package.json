@@ -20,6 +20,14 @@
       {
         "command": "fellowed.scrollToLine",
         "title": "Scroll to Line"
+      },
+      {
+        "command": "fellowed.start",
+        "title": "Start"
+      },
+      {
+        "command": "fellowed.showFileInfo",
+        "title": "show the current open file's infomation"
       }
     ]
   },

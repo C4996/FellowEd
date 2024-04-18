@@ -5,7 +5,24 @@ import * as vscode from 'vscode';
 function scrollToLine(line: number) {
 	const editor = vscode.window.activeTextEditor;
 }
+import * as fs from 'fs';
+import { promisify } from 'util';
 
+
+const stat = promisify(fs.stat);
+
+async function getFileMetadata(filePath: string) {
+	try {
+		const fileStat = await stat(filePath);
+		return {
+			created: fileStat.birthtime,
+			modified: fileStat.mtime,
+			size: fileStat.size
+		};
+	} catch (error) {
+		vscode.window.showErrorMessage(`Error: ${error}`);
+	}
+}
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -44,6 +61,27 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		} catch (err) {
 			vscode.window.showErrorMessage("请输入一个有效的行数！");
+		}
+	});	let show_file_info = vscode.commands.registerCommand('fellowed.showFileInfo', async () => {
+		const editor = vscode.window.activeTextEditor;
+		if (editor) {
+			const document = editor.document;
+			const text = document.getText();
+			const filePath = document.uri.fsPath;
+			
+			vscode.window.showInformationMessage(`File path: ${filePath}`);
+			vscode.window.showInformationMessage(`File content: ${text}`);
+			const detailInfo = await getFileMetadata(filePath);
+			try {
+				const fileStat = await stat(filePath);
+				vscode.window.showInformationMessage(`Created: ${fileStat.birthtime}`);
+				vscode.window.showInformationMessage(`Modified: ${fileStat.mtime}`);
+				vscode.window.showInformationMessage(`Size: ${fileStat.size}`);
+			} catch (error) {
+				vscode.window.showErrorMessage(`Error: ${error}`);
+			}
+		} else {
+			vscode.window.showErrorMessage('No active editor found!');
 		}
 	});
 	context.subscriptions.push(disposable);
