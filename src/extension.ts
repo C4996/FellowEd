@@ -20,7 +20,15 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('Hello World from fellowed!');
 	});
 
-	context.subscriptions.push(disposable);
+	let editContent = vscode.commands.registerCommand('fellowed.editContent', () => {
+		vscode.window.showInformationMessage('Edit Content');
+		vscode.window.activeTextEditor?.edit(editBuilder => {
+			editBuilder.delete(new vscode.Range(0, 0, 0, 11));
+			editBuilder.insert(new vscode.Position(0, 0), 'Hello World');
+		});
+	});
+
+	context.subscriptions.push(disposable, editContent);
 }
 
 // This method is called when your extension is deactivated

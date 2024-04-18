@@ -16,6 +16,10 @@
       {
         "command": "fellowed.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "fellowed.editContent",
+        "title": "Edit Content"
       }
     ]
   },
