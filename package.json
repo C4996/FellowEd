@@ -9,7 +9,10 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:fellowed.helloWorld",
+    "onStartupFinished" // This event ensures the extension is activated after VS Code has started
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
