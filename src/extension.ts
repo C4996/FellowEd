@@ -3,27 +3,8 @@
 import * as vscode from "vscode";
 import Fastify from "fastify";
 import getUserInfoHandler from "./getUserInfo";
+import { helloWorld, jumpToLine, showFileInfo } from "./commands";
 
-function scrollToLine(line: number) {
-  const editor = vscode.window.activeTextEditor;
-}
-import * as fs from "fs";
-import { promisify } from "util";
-
-const stat = promisify(fs.stat);
-
-async function getFileMetadata(filePath: string) {
-  try {
-    const fileStat = await stat(filePath);
-    return {
-      created: fileStat.birthtime,
-      modified: fileStat.mtime,
-      size: fileStat.size,
-    };
-  } catch (error) {
-    vscode.window.showErrorMessage(`Error: ${error}`);
-  }
-}
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -57,70 +38,20 @@ export function activate(context: vscode.ExtensionContext) {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand(
+  let disposableHelloWorld = vscode.commands.registerCommand(
     "fellowed.helloWorld",
-    async () => {
-      // The code you place here will be executed every time your command is executed
-      // Display a message box to the user
-      vscode.window.createTerminal("Fellowed Terminal");
-      vscode.window.showInformationMessage("Hello World from fellowed!");
-    }
+    helloWorld
   );
-  let scrollToLine = vscode.commands.registerCommand(
+  let disposableScrollToLine = vscode.commands.registerCommand(
     "fellowed.scrollToLine",
-    async () => {
-      const userInput = await vscode.window.showInputBox({
-        prompt: "请输入要跳转到的行数",
-        placeHolder: "在这里输入行数",
-      });
-      const editor = vscode.window.activeTextEditor;
-      if (!userInput) {
-        vscode.window.showErrorMessage("请输入行数！");
-      }
-      if (!editor) {
-        vscode.window.showErrorMessage("请打开一个文件！");
-      }
-      try {
-        if (userInput !== undefined && editor !== undefined) {
-          const line = parseInt(userInput);
-          const range = editor.document.lineAt(line).range;
-          editor.selection = new vscode.Selection(range.start, range.end);
-          editor.revealRange(range);
-        }
-      } catch (err) {
-        vscode.window.showErrorMessage("请输入一个有效的行数！");
-      }
-    }
+    jumpToLine
   );
-  let show_file_info = vscode.commands.registerCommand(
+  let disposableShowFileInfo = vscode.commands.registerCommand(
     "fellowed.showFileInfo",
-    async () => {
-      const editor = vscode.window.activeTextEditor;
-      if (editor) {
-        const document = editor.document;
-        const text = document.getText();
-        const filePath = document.uri.fsPath;
-
-        vscode.window.showInformationMessage(`File path: ${filePath}`);
-        vscode.window.showInformationMessage(`File content: ${text}`);
-        const detailInfo = await getFileMetadata(filePath);
-        try {
-          const fileStat = await stat(filePath);
-          vscode.window.showInformationMessage(
-            `Created: ${fileStat.birthtime}`
-          );
-          vscode.window.showInformationMessage(`Modified: ${fileStat.mtime}`);
-          vscode.window.showInformationMessage(`Size: ${fileStat.size}`);
-        } catch (error) {
-          vscode.window.showErrorMessage(`Error: ${error}`);
-        }
-      } else {
-        vscode.window.showErrorMessage("No active editor found!");
-      }
-    }
+    showFileInfo
   );
-  context.subscriptions.push(disposable);
-  context.subscriptions.push(scrollToLine);
+  context.subscriptions.push(disposableHelloWorld);
+  context.subscriptions.push(disposableScrollToLine);
 }
 
 // This method is called when your extension is deactivated

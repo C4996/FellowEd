@@ -1,9 +1,12 @@
-async function getUserInfoHandler(request: any, reply: any) {
-  console.info(request.params, request.query);
+import type { UserInfo } from "./schema/userInfo";
+import * as vscode from "vscode";
+
+async function getUserInfoHandler(): Promise<UserInfo> {
   return {
-    username: "fellowed",
+    machineId: vscode.env.machineId,
+    name: "User",
+    email: "example@example.com",
   };
 }
 
-// export { getUserInfoHandler };
 export default getUserInfoHandler;
