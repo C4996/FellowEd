@@ -15,19 +15,19 @@
     "commands": [
       {
         "command": "fellowed.helloWorld",
-        "title": "Hello World"
+        "title": "FellowEd: Hello World"
       },
       {
         "command": "fellowed.scrollToLine",
-        "title": "Scroll to Line"
-      },
-      {
-        "command": "fellowed.start",
-        "title": "Start"
+        "title": "FellowEd: Scroll to Line"
       },
       {
         "command": "fellowed.showFileInfo",
-        "title": "show the current open file's infomation"
+        "title": "FellowEd: show the current open file's infomation"
+      }, 
+      {
+        "command": "fellowed.runServer",
+        "title": "FellowEd: Run Server"
       }
     ]
   },

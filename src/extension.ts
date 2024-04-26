@@ -1,36 +1,11 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
-import Fastify from "fastify";
-import getUserInfoHandler from "./getUserInfo";
-import { helloWorld, jumpToLine, showFileInfo } from "./commands";
+import { helloWorld, jumpToLine, showFileInfo, runServer } from "./commands";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
-  const fastify = Fastify({
-    logger: true,
-  });
-
-  // Declare a route
-  fastify.get("/", async function handler(request, reply) {
-    return { hello: "from FellowED" };
-  });
-
-  fastify.get("/getUserInfo", getUserInfoHandler);
-
-  // ... add new routes here
-
-  (async () => {
-    // Run the server!
-    try {
-      await fastify.listen({ port: 3000 });
-    } catch (err) {
-      fastify.log.error(err);
-      process.exit(1);
-    }
-  })();
-
+export async function activate(context: vscode.ExtensionContext) {
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
   console.log('Congratulations, your extension "fellowed" is now active!');
@@ -50,9 +25,13 @@ export function activate(context: vscode.ExtensionContext) {
     "fellowed.showFileInfo",
     showFileInfo
   );
+  let disposableRunServer = vscode.commands.registerCommand(
+    "fellowed.runServer",
+    runServer
+  );
   context.subscriptions.push(disposableHelloWorld);
   context.subscriptions.push(disposableScrollToLine);
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
