@@ -3,12 +3,14 @@
 import * as vscode from "vscode";
 import Fastify from "fastify";
 import getUserInfoHandler from "./getUserInfo";
-import { helloWorld, jumpToLine, showFileInfo } from "./commands";
+import { helloWorld, jumpToLine, showFileInfo, startSession } from "./commands";
+import { newTRPC } from "./client";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-  const fastify = Fastify({
+  let trpc = undefined;
+  /* const fastify = Fastify({
     logger: true,
   });
 
@@ -29,7 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
       fastify.log.error(err);
       process.exit(1);
     }
-  })();
+  })(); */
 
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
@@ -49,6 +51,25 @@ export function activate(context: vscode.ExtensionContext) {
   let disposableShowFileInfo = vscode.commands.registerCommand(
     "fellowed.showFileInfo",
     showFileInfo
+  );
+  let disposableJoinSession = vscode.commands.registerCommand(
+    "fellowed.joinSession",
+    async () => {
+      // ask user input
+      let port = await vscode.window.showInputBox({
+        prompt: "请输入端口号",
+        placeHolder: "41131",
+      });
+      if (!port) {
+        port = "41131";
+      }
+      trpc = newTRPC(parseInt(port));
+      vscode.window.showInformationMessage("Session started! port is " + port);
+    }
+  );
+  let disposableStartSession = vscode.commands.registerCommand(
+    "fellowed.startSession",
+    startSession
   );
   context.subscriptions.push(disposableHelloWorld);
   context.subscriptions.push(disposableScrollToLine);

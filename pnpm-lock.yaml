@@ -5,6 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@trpc/client':
+    specifier: 11.0.0-rc.354
+    version: 11.0.0-rc.354(@trpc/server@11.0.0-rc.354)
+  '@trpc/server':
+    specifier: 11.0.0-rc.354
+    version: 11.0.0-rc.354
   fastify:
     specifier: ^4.26.2
     version: 4.26.2
@@ -38,7 +44,7 @@ devDependencies:
     specifier: ^8.57.0
     version: 8.57.0
   typescript:
-    specifier: ^5.3.3
+    specifier: ^5.4.3
     version: 5.4.3
 
 packages:
@@ -198,6 +204,18 @@ packages:
     resolution: {integrity: sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==}
     engines: {node: '>= 6'}
     dev: true
+
+  /@trpc/client@11.0.0-rc.354(@trpc/server@11.0.0-rc.354):
+    resolution: {integrity: sha512-wlvSnNQD8vopL8Jngk5sfZJgw5J3ttadsNoAA01ex5upL8kmN2a6bNNbOOGu/Go2RdZLH2we2GdZkBh6NA3Jmg==}
+    peerDependencies:
+      '@trpc/server': 11.0.0-rc.354+ab11f2310
+    dependencies:
+      '@trpc/server': 11.0.0-rc.354
+    dev: false
+
+  /@trpc/server@11.0.0-rc.354:
+    resolution: {integrity: sha512-45QgalVFW3+JnFqrfTWKRuqkDTOtl9tnPps6DG6kf2lwULwSW3v55+YpMWc6ZSrkZdBXGMON0bBR/Ab4hU0zbA==}
+    dev: false
 
   /@types/istanbul-lib-coverage@2.0.6:
     resolution: {integrity: sha512-2QF/t/auWm0lsy8XtKVPG19v3sSOQlJe/YHZgfjb/KBBHOGSV+J2q/S671rcq9uTBrLAXmZpqJiaQbMT+zNU1w==}
