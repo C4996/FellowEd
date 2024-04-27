@@ -1,4 +1,4 @@
- import { UserInfo } from '../schema/userInfo';
+import { UserInfo } from '../schema/userInfo';
 import { publicProcedure, router } from './trpc';
 import { fileQuery } from "../schema/fileInfo";
 import { selectedContent,UserComment } from '../schema/userComment';

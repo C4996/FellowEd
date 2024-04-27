@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import Fastify from "fastify";
-import getUserInfoHandler from "./getUserInfo";
+import getUserInfoHandler from "./user/getUserInfo";
 import { helloWorld, jumpToLine, showFileInfo, startSession } from "./commands";
 import { newTRPC } from "./client";
 

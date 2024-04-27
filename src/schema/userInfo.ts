@@ -1,4 +1,5 @@
 import { z } from "zod";
+import  { type FileInfo, fileInfo } from "./fileInfo";
 
 export const userInfo = z.object({
   machineId: z.string().uuid(), // 从 VSCode 获取的机器码
