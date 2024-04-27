@@ -1,5 +1,9 @@
 import * as vscode from "vscode";
 import { stat } from "fs/promises";
+import { newTRPC } from "./client";
+import { createHTTPServer } from '@trpc/server/adapters/standalone';
+import { appRouter } from "./server";
+
 // import { promisify } from "util"; // Node.js now has fs/promises, so we don't need this anymore
 async function getFileMetadata(filePath: string) {
   try {
@@ -66,4 +70,24 @@ export async function helloWorld() {
   // Display a message box to the user
   vscode.window.createTerminal("Fellowed Terminal");
   vscode.window.showInformationMessage("Hello World from fellowed!");
+}
+
+export async function getUserInfo(trpc: any) {
+  const resp = await trpc.getAllUsers.query();
+  vscode.window.showInformationMessage(JSON.stringify(resp));
+}
+
+export async function startSession() {
+  let port = await vscode.window.showInputBox({
+    prompt: "请输入端口号",
+    placeHolder: "41131",
+  });
+  if (!port) {
+    port = "41131";
+  }
+  const server = createHTTPServer({
+    router: appRouter,
+  });
+  server.listen(port);
+  vscode.window.showInformationMessage("Session created! port is " + port);
 }
