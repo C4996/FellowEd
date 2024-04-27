@@ -30,6 +30,10 @@
         "title": "show the current open file's infomation"
       },
       {
+        "command": "fellowed.getAllUsers",
+        "title": "Fellowed: Get All Users Info"
+      },
+      {
         "command": "fellowed.startSession",
         "title": "start a pair programming session"
       },

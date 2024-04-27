@@ -9,7 +9,7 @@ import { newTRPC } from "./client";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-  let trpc = undefined;
+  var trpc: ReturnType<typeof newTRPC>["trpc"] | undefined;
   /* const fastify = Fastify({
     logger: true,
   });
@@ -63,7 +63,7 @@ export function activate(context: vscode.ExtensionContext) {
       if (!port) {
         port = "41131";
       }
-      trpc = newTRPC(parseInt(port));
+      trpc = newTRPC(parseInt(port)).trpc;
       vscode.window.showInformationMessage("Session started! port is " + port);
     }
   );
@@ -73,6 +73,17 @@ export function activate(context: vscode.ExtensionContext) {
   );
   context.subscriptions.push(disposableHelloWorld);
   context.subscriptions.push(disposableScrollToLine);
+  let disposableGetAllUsers = vscode.commands.registerCommand(
+    "fellowed.getAllUsers",
+    async () => {
+      if (trpc) {
+        const resp = await trpc.getAllUsers.query();
+        await vscode.window.showInformationMessage(JSON.stringify(resp));
+      } else {
+        vscode.window.showErrorMessage("请先创建或加入一个协作会话！");
+      }
+    }
+  );
 }
 
 // This method is called when your extension is deactivated
