@@ -9,7 +9,7 @@ export function newTRPC(ip: string, port: number) {
   const trpc = createTRPCClient<AppRouter>({
     links: [
       httpBatchLink({
-        url: "http://" + ip + ":" + port,
+        url: `http://${ip}:${port}`,
       }),
     ],
   });
