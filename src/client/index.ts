@@ -5,11 +5,11 @@ import type { AppRouter } from "../server";
 // Pass AppRouter as generic here. 👇 This lets the `trpc` object know
 // what procedures are available on the server and their input/output types.
 
-export function newTRPC(port: number) {
+export function newTRPC(ip: string, port: number) {
   const trpc = createTRPCClient<AppRouter>({
     links: [
       httpBatchLink({
-        url: "http://localhost:41131",
+        url: "http://" + ip + ":" + port,
       }),
     ],
   });

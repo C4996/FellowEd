@@ -15,31 +15,27 @@
     "commands": [
       {
         "command": "fellowed.helloWorld",
-        "title": "Hello World"
+        "title": "FellowEd: Hello World"
       },
       {
         "command": "fellowed.scrollToLine",
-        "title": "Scroll to Line"
-      },
-      {
-        "command": "fellowed.start",
-        "title": "Start"
+        "title": "FellowEd: scroll to Line"
       },
       {
         "command": "fellowed.showFileInfo",
-        "title": "show the current open file's infomation"
+        "title": "FellowEd: show the current open file's infomation"
       },
       {
         "command": "fellowed.getAllUsers",
-        "title": "Fellowed: Get All Users Info"
+        "title": "Fellowed: get All Users Info"
       },
       {
         "command": "fellowed.startSession",
-        "title": "start a pair programming session"
+        "title": "Fellowed: start a pair programming session"
       },
       {
         "command": "fellowed.joinSession",
-        "title": "join a pair programming session"
+        "title": "Fellowed: join a pair programming session"
       }
     ]
   },
@@ -66,6 +62,7 @@
     "@trpc/client": "11.0.0-rc.354",
     "@trpc/server": "11.0.0-rc.354",
     "fastify": "^4.26.2",
+    "pnpm": "^9.0.6",
     "zod": "^3.23.4"
   }
 }
