@@ -1,13 +1,9 @@
 import { newTRPC } from "./client";
 
+export type TRPCClient = ReturnType<typeof newTRPC>["trpc"];
+
 export class Config {
-    private _trpc: ReturnType<typeof newTRPC>["trpc"] | undefined;
-    public get trpc(): ReturnType<typeof newTRPC>["trpc"] | undefined {
-        return this._trpc;
-    }
-    public set trpc(value: ReturnType<typeof newTRPC>["trpc"] | undefined) {
-        this._trpc = value;
-    }
+    public trpc: TRPCClient | undefined;
 
     private constructor() {}
     private static single: Config = undefined;

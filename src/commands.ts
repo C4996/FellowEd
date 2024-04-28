@@ -4,6 +4,7 @@ import { newTRPC } from "./client";
 import { createHTTPServer } from '@trpc/server/adapters/standalone';
 import { appRouter } from "./server";
 import { Config } from "./global";
+import { Address4, Address6 } from 'ip-address'
 
 // import { promisify } from "util"; // Node.js now has fs/promises, so we don't need this anymore
 async function getFileMetadata(filePath: string) {
@@ -105,7 +106,7 @@ export async function joinSession() {
       prompt: "请输入 Host IP 地址"
     });
     if (!ip) { return; }
-  } while (!(/\b(?:\d{1,3}\.){3}\d{1,3}\b/.test(ip!)));
+  } while (!(Address4.isValid(ip!) || Address6.isValid(ip!)));
   let port: number;
   do {
     let portStr = await vscode.window.showInputBox({
