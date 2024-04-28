@@ -3,6 +3,7 @@ import { stat } from "fs/promises";
 import { newTRPC } from "./client";
 import { createHTTPServer } from '@trpc/server/adapters/standalone';
 import { appRouter } from "./server";
+import { Config } from "./global";
 
 // import { promisify } from "util"; // Node.js now has fs/promises, so we don't need this anymore
 async function getFileMetadata(filePath: string) {
@@ -72,7 +73,12 @@ export async function helloWorld() {
   vscode.window.showInformationMessage("Hello World from fellowed!");
 }
 
-export async function getUserInfo(trpc: any) {
+export async function getAllUsers() {
+  const trpc = Config.getInstance().trpc;
+  if (!trpc) {
+    vscode.window.showErrorMessage("请先启动或加入一个会话！");
+    return;
+  }
   const resp = await trpc.getAllUsers.query();
   vscode.window.showInformationMessage(JSON.stringify(resp));
 }
@@ -91,3 +97,25 @@ export async function startSession() {
   server.listen(port);
   vscode.window.showInformationMessage("Session created! port is " + port);
 }
+
+export async function joinSession() {
+  let ip: string | undefined;
+  do {
+    ip = await vscode.window.showInputBox({
+      prompt: "请输入 Host IP 地址"
+    });
+    if (!ip) { return; }
+  } while (!(/\b(?:\d{1,3}\.){3}\d{1,3}\b/.test(ip!)));
+  let port: number;
+  do {
+    let portStr = await vscode.window.showInputBox({
+      prompt: '请输入端口号',
+    });
+    if (!portStr) { return; }
+    port = Number.parseInt(portStr);
+  } while (!(1 <= port && port <= 65535));
+
+  Config.getInstance().trpc = newTRPC(ip, port).trpc;
+  vscode.window.showInformationMessage('Join session at ' + ip + ':' + port);
+}
+
