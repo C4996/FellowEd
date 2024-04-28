@@ -62,6 +62,7 @@
     "@trpc/client": "11.0.0-rc.354",
     "@trpc/server": "11.0.0-rc.354",
     "fastify": "^4.26.2",
+    "ip-address": "^9.0.5",
     "pnpm": "^9.0.6",
     "zod": "^3.23.4"
   }
