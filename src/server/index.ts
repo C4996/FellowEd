@@ -1,17 +1,12 @@
-import { UserInfo } from "../schema/userInfo";
 import { publicProcedure, router } from "./trpc";
 import { fileQuery } from "../schema/fileInfo";
-import { clientUserInfo } from "../schema/userInfo";
 import { selectedContent, UserComment } from "../schema/userComment";
-import db from "../db";
+import { getAllUsers } from "./routes/user";
+import { tryConnect } from "./routes/connect";
+
 export const appRouter = router({
-  tryConnect: publicProcedure.input(clientUserInfo).query(async (opts) => {
-    const user = opts.input;
-    console.log(user);
-  }),
-  getAllUsers: publicProcedure.query(async () => {
-    return db.user.getAllData();
-  }),
+  tryConnect,
+  getAllUsers,
   getFileInfo: publicProcedure.input(fileQuery).query(async (opts) => {
     const { filePath } = opts.input;
     return {
