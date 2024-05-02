@@ -37,7 +37,15 @@
         "command": "fellowed.joinSession",
         "title": "Fellowed: join a pair programming session"
       }
-    ]
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "userList",
+          "name": "FellowEd User List"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run compile",
