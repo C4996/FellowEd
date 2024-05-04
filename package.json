@@ -36,6 +36,10 @@
       {
         "command": "fellowed.joinSession",
         "title": "Fellowed: join a pair programming session"
+      },
+      {
+        "command": "fellowed.openVirtualFile",
+        "title": "Fellowed: open a virtual file"
       }
     ]
   },

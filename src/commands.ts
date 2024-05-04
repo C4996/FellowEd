@@ -20,6 +20,14 @@ async function getFileMetadata(filePath: string) {
   }
 }
 
+
+export async function openVirtualFile() {
+  const uri = vscode.Uri.parse("fellowed://helloworld");
+  vscode.workspace.openTextDocument(uri).then((doc) => {
+    vscode.window.showTextDocument(doc);
+  });
+}
+
 export async function jumpToLine(line: number) {
   const userInput = await vscode.window.showInputBox({
     prompt: "请输入要跳转到的行数",
