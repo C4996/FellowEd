@@ -5,6 +5,7 @@ import { createHTTPServer } from '@trpc/server/adapters/standalone';
 import { appRouter } from "./server";
 import { Config } from "./global";
 import { Address4, Address6 } from 'ip-address'
+import os from 'os';
 
 // import { promisify } from "util"; // Node.js now has fs/promises, so we don't need this anymore
 async function getFileMetadata(filePath: string) {
@@ -20,6 +21,18 @@ async function getFileMetadata(filePath: string) {
   }
 }
 
+function getIpAddress() {
+  const interfaces = os.networkInterfaces();
+  for (const key in interfaces) {
+    const iface = interfaces[key];
+    for (const alias of iface) {
+      if (alias.family === 'IPv4' && !alias.internal) {
+        return alias.address;
+      }
+    }
+  }
+  return '127.0.0.1';
+}
 
 export async function openVirtualFile() {
   const uri = vscode.Uri.parse("fellowed://helloworld");
@@ -105,6 +118,7 @@ export async function startSession() {
   });
   server.listen(port);
   vscode.window.showInformationMessage("Session created! port is " + port);
+  vscode.window.showInformationMessage("Your IP address is " + getIpAddress());
 }
 
 export async function joinSession() {
