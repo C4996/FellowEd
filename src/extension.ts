@@ -34,6 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
       getAllUsers,
     )
   ];
+
   commands.forEach((value) => context.subscriptions.push(value));
 }
 

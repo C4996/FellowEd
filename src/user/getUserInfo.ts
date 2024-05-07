@@ -6,7 +6,7 @@ async function getUserInfoHandler(): Promise<UserInfo> {
     machineId: vscode.env.machineId,
     lastLoginTime: new Date().toISOString(),
     userId: "1",
-    privilege: "maintainer",
+    role: "maintainer",
     name: "User",
     email: "example@example.com",
   };

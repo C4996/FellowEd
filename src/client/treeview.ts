@@ -11,12 +11,12 @@ class User {
     public name: string;
     public uuid: string;
     public status: UserStatus;
-    public privilege: string;
+    public role: string;
     constructor(userInfo: UserInfo, status: UserStatus) {
         this.name = userInfo.name!;
         this.uuid = userInfo.userId!;
         this.status = status;
-        this.privilege = userInfo.privilege!;
+        this.role = userInfo.role!;
     }
 }
 
@@ -35,14 +35,14 @@ class UserTreeDataProvider implements vscode.TreeDataProvider<User | UserGroup> 
         this._onDidChangeTreeData.fire();
     }
 
-    getChildren(element?: User | UserGroup): Thenable<(User | UserGroup)[]> {
+    getChildren(element?: User | UserGroup) {
         if (!element) {
-            return Promise.resolve(this.userGroups);
-        } else if (element instanceof UserGroup) {
-            return Promise.resolve(element.users);
-        } else {
-            return Promise.resolve([]);
+            return this.userGroups;
+        } 
+        if (element instanceof UserGroup) {
+            return element.users;
         }
+        return [];
     }
 
     getTreeItem(element: User | UserGroup): vscode.TreeItem {
@@ -53,7 +53,7 @@ class UserTreeDataProvider implements vscode.TreeDataProvider<User | UserGroup> 
         } else {
             const treeItem = new vscode.TreeItem(element.name, vscode.TreeItemCollapsibleState.None);
             treeItem.iconPath = new vscode.ThemeIcon(element.status === UserStatus.Online ? 'circle-filled' : 'circle-outline');
-            treeItem.description = element.privilege;
+            treeItem.description = element.role;
             return treeItem;
         }
     }
@@ -77,7 +77,7 @@ export function userListActivate(context: vscode.ExtensionContext) {
             machineId: vscode.env.machineId,
             lastLoginTime: new Date().toISOString(),
             userId: "1",
-            privilege: "maintainer",
+            role: "maintainer",
             name: "AAAA",
             email: "example@example.com",
           },
@@ -85,7 +85,7 @@ export function userListActivate(context: vscode.ExtensionContext) {
             machineId: vscode.env.machineId,
             lastLoginTime: new Date().toISOString(),
             userId: "2",
-            privilege: "developer",
+            role: "developer",
             name: "BBBB",
             email: "example@example.com",
           },
@@ -93,7 +93,7 @@ export function userListActivate(context: vscode.ExtensionContext) {
             machineId: vscode.env.machineId,
             lastLoginTime: new Date().toISOString(),
             userId: "3",
-            privilege: "maintainer",
+            role: "maintainer",
             name: "CCCC",
             email: "example@example.com",
           },
@@ -101,7 +101,7 @@ export function userListActivate(context: vscode.ExtensionContext) {
             machineId: vscode.env.machineId,
             lastLoginTime: new Date().toISOString(),
             userId: "4",
-            privilege: "developer",
+            role: "developer",
             name: "DDDD",
             email: "example@example.com",
           },
@@ -109,7 +109,7 @@ export function userListActivate(context: vscode.ExtensionContext) {
             machineId: vscode.env.machineId,
             lastLoginTime: new Date().toISOString(),
             userId: "5",
-            privilege: "visitor",
+            role: "visitor",
             name: "EEEE",
             email: "example@example.com",
           }
