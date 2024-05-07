@@ -3,6 +3,7 @@ import { fileQuery } from "../schema/fileInfo";
 import { selectedContent, UserComment } from "../schema/userComment";
 import { getAllUsers, joinSession } from "./routes/user";
 import { tryConnect } from "./routes/connect";
+import * as vscode from 'vscode';
 
 export const appRouter = router({
   tryConnect,
@@ -48,6 +49,30 @@ export const appRouter = router({
       createdAt: "2021-03-01T00:00:00.000Z",
     } as UserComment;
   }),
+  getFileContent: publicProcedure.input(fileQuery).query(async (opts) => {
+    const { filePath } = opts.input;
+
+    return {
+      fileName: 'Test',
+      content: 'Hello World'
+    };
+  }),
+  getCurrentFile: publicProcedure.query(async (opts) => {
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+      return {
+        status: 'Ok',
+        fileName: editor.document.fileName,
+        content: editor.document.getText(),
+      };
+    } else {
+      return {
+        status: 'Error: No opened file!',
+        fileName: '',
+        content: '',
+      };
+    }
+  })
 });
 
 // Export type router type signature,

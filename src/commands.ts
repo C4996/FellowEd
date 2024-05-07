@@ -5,6 +5,7 @@ import { createHTTPServer } from '@trpc/server/adapters/standalone';
 import { appRouter } from "./server";
 import { Config } from "./global";
 import { Address4, Address6 } from 'ip-address';
+import { RemoteDocumentProvider } from "./client/remoteDoc";
 
 // import { promisify } from "util"; // Node.js now has fs/promises, so we don't need this anymore
 async function getFileMetadata(filePath: string) {
@@ -137,3 +138,21 @@ export async function joinSession() {
   }
 }
 
+export async function showCurrentFile() {
+  const trpc = Config.getInstance().trpc;
+  if (!trpc) {
+    vscode.window.showErrorMessage("请先启动或加入一个会话！");
+    return;
+  }
+  const resp = await trpc.getCurrentFile.query();
+  if (resp.status === 'Ok') {
+    const remoteDoc = new RemoteDocumentProvider(
+      resp.fileName,
+      Config.getInstance().context
+    );
+    Config.getInstance().remoteDoc = remoteDoc;
+    remoteDoc.content = resp.content;
+  } else {
+    vscode.window.showErrorMessage(resp.status);
+  }
+}

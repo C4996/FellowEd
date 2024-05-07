@@ -27,15 +27,19 @@
       },
       {
         "command": "fellowed.getAllUsers",
-        "title": "Fellowed: get All Users Info"
+        "title": "FellowEd: get All Users Info"
       },
       {
         "command": "fellowed.startSession",
-        "title": "Fellowed: start a pair programming session"
+        "title": "FellowEd: start a pair programming session"
       },
       {
         "command": "fellowed.joinSession",
-        "title": "Fellowed: join a pair programming session"
+        "title": "FellowEd: join a pair programming session"
+      },
+      {
+        "command": "fellowed.showCurrentFile",
+        "title": "FellowEd: show current file at server"
       }
     ],
     "views": {
