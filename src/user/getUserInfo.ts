@@ -1,4 +1,4 @@
-import type { UserInfo } from "../schema/userInfo";
+import type { UserInfo } from "../schema/userInfo.js";
 import * as vscode from "vscode";
 
 async function getUserInfoHandler(): Promise<UserInfo> {

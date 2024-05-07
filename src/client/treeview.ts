@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { UserInfo } from '../schema/userInfo';
+import { UserInfo } from '../schema/userInfo.js';
 import assert from 'assert';
 
 export enum UserStatus {

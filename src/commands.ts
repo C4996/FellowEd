@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
 import { stat } from "fs/promises";
-import { newTRPC } from "./client";
+import { newTRPC } from "./client/index.js";
 import { createHTTPServer } from '@trpc/server/adapters/standalone';
-import { appRouter } from "./server";
-import { Config } from "./global";
+import { appRouter } from "./server/index.js";
+import { Config } from "./global.js";
 import { Address4, Address6 } from 'ip-address';
 
 // import { promisify } from "util"; // Node.js now has fs/promises, so we don't need this anymore

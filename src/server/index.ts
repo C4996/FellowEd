@@ -1,8 +1,8 @@
-import { publicProcedure, router } from "./trpc";
-import { fileQuery } from "../schema/fileInfo";
-import { selectedContent, UserComment } from "../schema/userComment";
-import { getAllUsers, joinSession } from "./routes/user";
-import { tryConnect } from "./routes/connect";
+import { publicProcedure, router } from "./trpc.js";
+import { fileQuery } from "../schema/fileInfo.js";
+import { selectedContent, UserComment } from "../schema/userComment.js";
+import { getAllUsers, joinSession } from "./routes/user.js";
+import { tryConnect } from "./routes/connect.js";
 
 export const appRouter = router({
   tryConnect,

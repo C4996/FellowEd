@@ -1,4 +1,3 @@
-import { userInfo } from './userInfo';
 import { z } from 'zod';
 
 export const message = z.object({

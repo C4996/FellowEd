@@ -1,4 +1,4 @@
-import { newTRPC } from "./client";
+import { newTRPC } from "./client/index.js";
 
 export type TRPCClient = ReturnType<typeof newTRPC>["trpc"];
 

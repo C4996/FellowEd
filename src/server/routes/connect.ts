@@ -1,6 +1,6 @@
-import { publicProcedure } from "../trpc";
-import { clientUserInfo } from "../../schema/userInfo";
-import { UserInfo } from "../../schema/userInfo";
+import { publicProcedure } from "../trpc.js";
+import { clientUserInfo } from "../../schema/userInfo.js";
+import { UserInfo } from "../../schema/userInfo.js";
 
 export const tryConnect = publicProcedure
   .input(clientUserInfo)

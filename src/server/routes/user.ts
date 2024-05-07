@@ -1,6 +1,6 @@
-import { publicProcedure } from "../trpc";
-import db from "../../db";
-import { UserInfo, clientUserInfo } from "../../schema/userInfo";
+import { publicProcedure } from "../trpc.js";
+import db from "../../db/index.js";
+import { UserInfo, clientUserInfo } from "../../schema/userInfo.js";
 import { webcrypto } from "crypto";
 import * as vscode from "vscode";
 
@@ -17,8 +17,9 @@ export const joinSession = publicProcedure.input(clientUserInfo).mutation(async 
     role: "developer",
   };
   db.user.insert(user);
+  
   return {
     success: true,
-    fileOpened: vscode.window.activeTextEditor?.document.fileName,
+    fileOpened: [vscode.window.activeTextEditor?.document.fileName],
   };
 });
