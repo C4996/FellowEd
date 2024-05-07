@@ -29,7 +29,10 @@ class UserTreeDataProvider implements vscode.TreeDataProvider<User | UserGroup> 
     readonly onDidChangeTreeData: vscode.Event<User | UserGroup | undefined | null | void> = this._onDidChangeTreeData.event;
 
     public users: User[] = [];
-    public userGroups: UserGroup[] = [];
+    public userGroups: UserGroup[] = [
+        new UserGroup(UserStatus.Online, []),
+        new UserGroup(UserStatus.Offline, []),
+    ];
 
     refresh(): void {
         this._onDidChangeTreeData.fire();
@@ -131,18 +134,9 @@ export function addUsers(users: UserInfo[], status: UserStatus[]) {
         userTreeDataProvider.users.push(new User(users[i], status[i]));
     }
 
-    userTreeDataProvider.userGroups.push(
-        new UserGroup(
-            UserStatus.Online,
-            userTreeDataProvider.users.filter(value => value.status === UserStatus.Online)
-        ),
-    );
-    userTreeDataProvider.userGroups.push(
-        new UserGroup(
-            UserStatus.Offline,
-            userTreeDataProvider.users.filter(value => value.status === UserStatus.Offline)
-        ),
-    );
+    userTreeDataProvider.userGroups[0].users = userTreeDataProvider.users.filter(value => value.status === UserStatus.Online);
+    userTreeDataProvider.userGroups[1].users = userTreeDataProvider.users.filter(value => value.status === UserStatus.Offline);
+
     userTreeDataProvider.refresh();
 }
 
