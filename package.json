@@ -40,6 +40,14 @@
       {
         "command": "fellowed.openVirtualFile",
         "title": "Fellowed: open a virtual file"
+      },
+      {
+        "command": "fellowed.addMultipleCursors",
+        "title": "Fellowed: add multiple cursors"
+      },
+      {
+        "command": "fellowed.openVirtualFile1",
+        "title": "Fellowed: open a virtual file1"
       }
     ]
   },

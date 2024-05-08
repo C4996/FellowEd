@@ -1,8 +1,10 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
-import { getAllUsers, helloWorld, joinSession, jumpToLine, openVirtualFile, showFileInfo, startSession } from "./commands";
+import { addMultipleCursors, getAllUsers, helloWorld, joinSession, jumpToLine, openVirtualFile, showFileInfo, startSession } from "./commands";
 import { virtualDocumentScheme, VirtualDocumentProvider } from "./virtualDocument";
+import { virtualFileSystemProvider, virtualFileSystemScheme } from "./virtualFileSystem";
+import { openVirtualFile1 } from "./commands";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -36,7 +38,17 @@ export function activate(context: vscode.ExtensionContext) {
       "fellowed.openVirtualFile",
       openVirtualFile
     ),
-    vscode.workspace.registerTextDocumentContentProvider(virtualDocumentScheme, VirtualDocumentProvider),
+    vscode.commands.registerCommand(
+      "fellowed.addMultipleCursors",
+      addMultipleCursors
+    )
+    ,
+    vscode.commands.registerCommand(
+      "fellowed.openVirtualFile1",
+      openVirtualFile1
+    ),
+    // vscode.workspace.registerTextDocumentContentProvider(virtualDocumentScheme, VirtualDocumentProvider),
+    vscode.workspace.registerFileSystemProvider(virtualFileSystemScheme, virtualFileSystemProvider, { isCaseSensitive: true }),
   ];
   commands.forEach((value) => context.subscriptions.push(value));
 }

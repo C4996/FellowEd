@@ -21,6 +21,19 @@ async function getFileMetadata(filePath: string) {
   }
 }
 
+export function addMultipleCursors() {
+  const editor = vscode.window.activeTextEditor;
+  if (!editor) {
+    return;
+  }
+  const position1 = new vscode.Position(0, 0);
+  const position2 = new vscode.Position(0, 3);
+
+  const selection1 = new vscode.Selection(position1, position1);
+  const selection2 = new vscode.Selection(position2, position2);
+  editor.selections = [selection1, selection2];
+}
+
 function getIpAddress() {
   const interfaces = os.networkInterfaces();
   for (const key in interfaces) {
@@ -39,6 +52,13 @@ export async function openVirtualFile() {
   vscode.workspace.openTextDocument(uri).then((doc) => {
     vscode.window.showTextDocument(doc);
   });
+}
+
+export async function openVirtualFile1() {
+  const uri = vscode.Uri.parse("fellowed:///helloworld");
+  const doc = await vscode.workspace.openTextDocument(uri);
+  vscode.window.showTextDocument(doc);
+  
 }
 
 export async function jumpToLine(line: number) {
