@@ -19,6 +19,6 @@ export const joinSession = publicProcedure.input(clientUserInfo).mutation(async 
   db.user.insert(user);
   return {
     success: true,
-    fileOpened: vscode.window.activeTextEditor?.document.fileName,
+    fileOpened: [vscode.window.activeTextEditor?.document.fileName],
   };
 });

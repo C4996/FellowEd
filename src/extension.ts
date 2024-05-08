@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
-import { getAllUsers, helloWorld, joinSession, jumpToLine, showFileInfo, startSession } from "./commands";
+import { getAllUsers, helloWorld, joinSession, jumpToLine, showFileInfo, startSession } from "./commands.js";
 import { userListActivate } from "./client/treeview";
 
 // This method is called when your extension is activated

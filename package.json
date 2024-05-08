@@ -56,9 +56,11 @@
     "test": "vscode-test"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.9",
     "@types/mocha": "^10.0.6",
     "@types/node": "20.x",
     "@types/vscode": "^1.88.0",
+    "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
     "@typescript-eslint/parser": "^7.7.1",
     "@vscode/test-cli": "^0.0.9",
@@ -72,7 +74,14 @@
     "@trpc/server": "11.0.0-rc.354",
     "fastify": "^4.26.2",
     "ip-address": "^9.0.5",
+    "lib0": "^0.2.93",
+    "lodash.debounce": "^4.0.8",
     "pnpm": "^9.0.6",
+    "trpc-yjs": "^0.1.0",
+    "ws": "^8.17.0",
+    "y-protocols": "^1.0.6",
+    "y-websocket": "^2.0.2",
+    "yjs": "^13.6.15",
     "zod": "^3.23.4"
   }
 }

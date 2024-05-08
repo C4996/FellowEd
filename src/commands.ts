@@ -1,10 +1,15 @@
 import * as vscode from "vscode";
 import { stat } from "fs/promises";
 import { newTRPC } from "./client";
-import { createHTTPServer } from '@trpc/server/adapters/standalone';
+import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import { appRouter } from "./server";
 import { Config } from "./global";
-import { Address4, Address6 } from 'ip-address';
+import { Address4, Address6 } from "ip-address";
+import createWSServer from "./sync/ws";
+import createWSClient from "./sync/index";
+// import type { Doc, Map } from "yjs";
+type Doc = any;
+type Map = any;
 
 // import { promisify } from "util"; // Node.js now has fs/promises, so we don't need this anymore
 async function getFileMetadata(filePath: string) {
@@ -92,24 +97,40 @@ export async function startSession() {
   if (!port) {
     port = "41131";
   }
+  const httpServerPort = Number.parseInt(port);
+  const wsServerPort = httpServerPort + 1;
+
   const server = createHTTPServer({
     router: appRouter,
   });
-  server.listen(port);
+  server.listen(httpServerPort);
+  vscode.window.showInformationMessage(
+    "HTTP Server created! port is " + httpServerPort
+  );
+
+  createWSServer("0.0.0.0", wsServerPort);
+  const doc = createWSClient("localhost", wsServerPort).doc as Doc;
+  const ymap = doc.getMap();
+  ymap.set("index.js", "console.log('Hello, world!');");
+
+  vscode.window.showInformationMessage(
+    "WebSocket Server created! port is " + wsServerPort
+  );
+
   vscode.window.showInformationMessage("Session created! port is " + port);
 }
 
 export async function joinSession() {
   let ip: string | undefined;
   do {
-    ip = await vscode.window.showInputBox({
-      prompt: "请输入 Host IP 地址",
-      placeHolder: "localhost"
-    }) || "localhost";
+    ip =
+      (await vscode.window.showInputBox({
+        prompt: "请输入 Host IP 地址",
+        placeHolder: "localhost",
+      })) || "localhost";
     if (ip === "localhost") {
       ip = "127.0.0.1";
     }
-
   } while (!(Address4.isValid(ip!) || Address6.isValid(ip!)));
   let port: number;
   do {
@@ -135,5 +156,10 @@ export async function joinSession() {
     Config.getInstance().trpc = undefined;
     vscode.window.showErrorMessage("Error: " + error);
   }
-}
 
+  const wsclient = createWSClient(ip, port + 1);
+  const ymap = (wsclient.doc as Doc).getMap();
+  ymap.observe((event) => {
+    vscode.window.showInformationMessage(JSON.stringify(ymap.toJSON()));
+  });
+}
