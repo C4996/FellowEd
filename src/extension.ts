@@ -27,7 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
     ),
     vscode.commands.registerCommand(
       "fellowed.startSession",
-      startSession
+      (context) => startSession(context)
     ),
     vscode.commands.registerCommand(
       "fellowed.getAllUsers",
