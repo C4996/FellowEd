@@ -7,9 +7,7 @@ import { Config } from "./global";
 import { Address4, Address6 } from "ip-address";
 import createWSServer from "./sync/ws";
 import createWSClient from "./sync/index";
-// import type { Doc, Map } from "yjs";
-type Doc = any;
-type Map = any;
+import { observe } from "./sync/observer";
 
 // import { promisify } from "util"; // Node.js now has fs/promises, so we don't need this anymore
 async function getFileMetadata(filePath: string) {
@@ -171,8 +169,6 @@ export async function joinSession() {
   }
 
   const wsclient = createWSClient(ip, port + 1);
-  const ymap = (wsclient.doc as Doc).getMap();
-  ymap.observe((event) => {
-    vscode.window.showInformationMessage(JSON.stringify(ymap.toJSON()));
-  });
+
+  observe(wsclient.doc);
 }
