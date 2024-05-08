@@ -1,13 +1,13 @@
-const Y = require("yjs");
-const syncProtocol = require("y-protocols/sync");
-const awarenessProtocol = require("y-protocols/awareness");
+import Y = require("yjs");
+import syncProtocol = require("y-protocols/sync");
+import awarenessProtocol = require("y-protocols/awareness");
 
-const encoding = require("lib0/encoding");
-const decoding = require("lib0/decoding");
-const map = require("lib0/map");
+import encoding = require("lib0/encoding");
+import decoding = require("lib0/decoding");
+import map = require("lib0/map");
 
-// const debounce = require("lodash.debounce");
-import debounce from "lodash.debounce";
+import debounce = require("lodash.debounce");
+// import debounce from "lodash.debounce";
 
 const callbackHandler = require("./callback.cjs").callbackHandler;
 const isCallbackSet = require("./callback.cjs").isCallbackSet;

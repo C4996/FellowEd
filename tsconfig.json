@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
+    "module": "CommonJS",
     "target": "ES2022",
     "outDir": "out",
     "lib": ["ESNext", "DOM"],
@@ -8,5 +8,8 @@
     "rootDir": "src",
     "strict": false,
     "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */
-  }
+  },
+  "include": [
+    "src/**/*" // Add the missing file path here
+  ]
 }

@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@seald-io/nedb':
-        specifier: ^4.0.4
-        version: 4.0.4
+        specifier: github:RobMayer/nedb
+        version: https://codeload.github.com/RobMayer/nedb/tar.gz/c788549de155b3d16bd5c4c8ffd8821299b159c4
       '@trpc/client':
         specifier: 11.0.0-rc.354
         version: 11.0.0-rc.354(@trpc/server@11.0.0-rc.354)
@@ -172,8 +172,9 @@ packages:
   '@seald-io/binary-search-tree@1.0.3':
     resolution: {integrity: sha512-qv3jnwoakeax2razYaMsGI/luWdliBLHTdC6jU55hQt1hcFqzauH/HsBollQ7IR4ySTtYhT+xyHoijpA16C+tA==}
 
-  '@seald-io/nedb@4.0.4':
-    resolution: {integrity: sha512-CUNcMio7QUHTA+sIJ/DC5JzVNNsHe743TPmC4H5Gij9zDLMbmrCT2li3eVB72/gF63BPS8pWEZrjlAMRKA8FDw==}
+  '@seald-io/nedb@https://codeload.github.com/RobMayer/nedb/tar.gz/c788549de155b3d16bd5c4c8ffd8821299b159c4':
+    resolution: {tarball: https://codeload.github.com/RobMayer/nedb/tar.gz/c788549de155b3d16bd5c4c8ffd8821299b159c4}
+    version: 4.0.4
 
   '@tootallnate/once@1.1.2':
     resolution: {integrity: sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==}
@@ -1543,7 +1544,7 @@ snapshots:
 
   '@seald-io/binary-search-tree@1.0.3': {}
 
-  '@seald-io/nedb@4.0.4':
+  '@seald-io/nedb@https://codeload.github.com/RobMayer/nedb/tar.gz/c788549de155b3d16bd5c4c8ffd8821299b159c4':
     dependencies:
       '@seald-io/binary-search-tree': 1.0.3
       localforage: 1.10.0

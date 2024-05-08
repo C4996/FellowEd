@@ -1,7 +1,7 @@
 const Y = require("yjs");
 // import { WebsocketProvider } from "y-websocket";
 const { WebsocketProvider } = require("y-websocket");
-import ws from "ws";
+import ws = require("ws");
 
 export default function createWSClient(host: string, port: number | string) {
   const doc = new Y.Doc();
