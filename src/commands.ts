@@ -160,6 +160,10 @@ function randomData(lineCnt: number, lineLen = 155): Buffer {
   return Buffer.from(lines.join("\n"), "utf8");
 }
 
+async function sleep (ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export async function joinSession() {
   let ip: string | undefined;
   do {
@@ -214,8 +218,11 @@ export async function joinSession() {
     name: "FellowEd Workspace",
   });
 
-  console.log("========fedfs", vscode.workspace.workspaceFolders);
-  /* 
+  while (!vscode.workspace.workspaceFolders) {
+    console.log("========fedfs", vscode.workspace.workspaceFolders);
+    await sleep(200);
+  }
+  /*
   subscriptions.push(
     vscode.commands.registerCommand("memfs.reset", (_) => {
       for (const [name] of memFs.readDirectory(vscode.Uri.parse("fedfs:/"))) {
@@ -348,9 +355,25 @@ export async function joinSession() {
     Buffer.from([0, 0, 0, 1, 7, 0, 0, 1, 1]),
     { create: true, overwrite: true }
   ); */
+  // [[".git",2],[".gitignore",1],["AFM仿真",2],["NumUtil.hi",1],["NumUtil.hs",1],["README.md",1],["作图纸.pdf",1],["双棱镜和劳埃镜干涉",2],["巨磁阻效应",2],["氢原子光谱",2],["磁光效应",2],["稳态法",2],["迈克尔逊干涉",2],["阿贝成像",2]]
   for (const [file, type] of files) {
-    vscode.window.showInformationMessage(file);
-    // if (type == 
+    console.log("===============fedfs", file, type);
+    // vscode.window.showInformationMessage(file);
+    switch (type) {
+      case vscode.FileType.File:
+        memFs.writeFile(vscode.Uri.parse(`fedfs:/${file}`), Buffer.from("foo"), {
+          create: true,
+          overwrite: true,
+        });
+        break;
+
+      case vscode.FileType.Directory:
+        memFs.createDirectory(vscode.Uri.parse(`fedfs:/${file}`));
+        break;
+
+      default:
+        break;
+    }
   }
   console.log("===============fedfs", memFs);
 }
