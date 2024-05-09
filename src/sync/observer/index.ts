@@ -1,7 +1,7 @@
 import { FellowFS, File, Directory } from "../../fs/provider";
 
-import type { Doc as YDoc, Map as YMap } from "yjs";
-// type YDoc = any; type YMap = any;
+// import type { Doc as YDoc, Map as YMap } from "yjs";
+type YDoc = any; type YMap = any;
 
 export function observe(doc: YDoc) {
   const yFilesMap = doc.getMap("files");

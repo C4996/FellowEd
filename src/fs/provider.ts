@@ -57,7 +57,6 @@ export class FellowFS implements vscode.FileSystemProvider {
   }
 
   readDirectory(uri: vscode.Uri): [string, vscode.FileType][] {
-    // TODO
     const entry = this._lookupAsDirectory(uri, false);
     const result: [string, vscode.FileType][] = [];
     for (const [name, child] of entry.entries) {
@@ -69,7 +68,6 @@ export class FellowFS implements vscode.FileSystemProvider {
   // --- manage file contents
 
   readFile(uri: vscode.Uri): Uint8Array {
-    // TODO: Use yjs or trpc?
     const data = this._lookupAsFile(uri, false).data;
     if (data) {
       return data;

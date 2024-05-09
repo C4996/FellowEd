@@ -8,6 +8,9 @@ import { Address4, Address6 } from "ip-address";
 import createWSServer from "./sync/ws";
 import createWSClient from "./sync/index";
 import { observe } from "./sync/observer";
+import { FellowFS } from "./fs/provider";
+import { ExtensionContext } from "./context";
+import { listDir } from "./fs/workspace";
 
 // import { promisify } from "util"; // Node.js now has fs/promises, so we don't need this anymore
 async function getFileMetadata(filePath: string) {
@@ -106,7 +109,7 @@ export async function getAllUsers() {
   vscode.window.showInformationMessage(JSON.stringify(resp));
 }
 
-export async function startSession(context: vscode.ExtensionContext) {
+export async function startSession() {
   let port = await vscode.window.showInputBox({
     prompt: "请输入端口号",
     placeHolder: "41131",
@@ -122,13 +125,12 @@ export async function startSession(context: vscode.ExtensionContext) {
   });
   server.listen(httpServerPort);
   vscode.window.showInformationMessage(
-    "HTTP Server created! port is " + httpServerPort
+    "FellowEd server created! port is " + httpServerPort
   );
 
   createWSServer("0.0.0.0", wsServerPort);
   const doc = createWSClient("localhost", wsServerPort).doc;
   const ymap = doc.getMap("files");
-  doc.set;
   // ymap.set("index.js", "console.log('Hello, world!');");
   const currentlyOpenedFiles = vscode.workspace.textDocuments;
   for (const file of currentlyOpenedFiles) {
@@ -142,30 +144,20 @@ export async function startSession(context: vscode.ExtensionContext) {
       ymap.set(event.document.fileName, event.document.getText());
     }),
   ];
-  // context.subscriptions.push(...subscriptions);
-  // createWSServer("0.0.0.0", wsServerPort);
-  // const doc = createWSClient("localhost", wsServerPort).doc as Doc;
-  // const ymap = doc.getMap();
-  // // ymap.set("index.js", "console.log('Hello, world!');");
-  // const currentlyOpenedFiles = vscode.workspace.textDocuments;
-  // for (const file of currentlyOpenedFiles) {
-  //   ymap.set(file.fileName, file.getText());
-  // }
-  //   const subscriptions = [
-  //     vscode.workspace.onDidOpenTextDocument((document) => {
-  //       ymap.set(document.fileName, document.getText());
-  //     }),
-  //     vscode.workspace.onDidChangeTextDocument((event) => {
-  //       ymap.set(event.document.fileName, event.document.getText());
-  //     }),
-  //   ];
-  //   // context.subscriptions.push(...subscriptions);
+}
 
-  //   vscode.window.showInformationMessage(
-  //     "WebSocket Server created! port is " + wsServerPort
-  //   );
-
-  //   vscode.window.showInformationMessage("Session created! port is " + port);
+function randomData(lineCnt: number, lineLen = 155): Buffer {
+  const lines: string[] = [];
+  for (let i = 0; i < lineCnt; i++) {
+    let line = "";
+    while (line.length < lineLen) {
+      line += Math.random()
+        .toString(2 + (i % 34))
+        .substr(2);
+    }
+    lines.push(line.substr(0, lineLen));
+  }
+  return Buffer.from(lines.join("\n"), "utf8");
 }
 
 export async function joinSession() {
@@ -190,6 +182,7 @@ export async function joinSession() {
     port = Number.parseInt(portStr);
   } while (!(1 <= port && port <= 65535));
 
+  let files: Awaited<ReturnType<typeof listDir>>;
   try {
     const trpc = newTRPC(ip, port).trpc;
     Config.getInstance().trpc = trpc;
@@ -200,12 +193,164 @@ export async function joinSession() {
       email: "example@gmail.com",
     });
     vscode.window.showInformationMessage(JSON.stringify(resp));
+    files = resp.files;
   } catch (error) {
     Config.getInstance().trpc = undefined;
     vscode.window.showErrorMessage("Error: " + error);
+    return;
   }
 
   const wsclient = createWSClient(ip, port + 1);
 
   observe(wsclient.doc);
+
+  const memFs = ExtensionContext.getInstance().fs;
+  if (!memFs) {
+    vscode.window.showErrorMessage("FS not initialized!");
+    return;
+  }
+  vscode.workspace.updateWorkspaceFolders(0, 0, {
+    uri: vscode.Uri.parse("fedfs:/"),
+    name: "FellowEd Workspace",
+  });
+
+  console.log("========fedfs", vscode.workspace.workspaceFolders);
+  /* 
+  subscriptions.push(
+    vscode.commands.registerCommand("memfs.reset", (_) => {
+      for (const [name] of memFs.readDirectory(vscode.Uri.parse("fedfs:/"))) {
+        memFs.delete(vscode.Uri.parse(`fedfs:/${name}`));
+      }
+      initialized = false;
+    })
+  );
+
+  subscriptions.push(
+    vscode.commands.registerCommand("memfs.addFile", (_) => {
+      if (initialized) {
+        memFs.writeFile(
+          vscode.Uri.parse(`fedfs:/file.txt`),
+          Buffer.from("foo"),
+          { create: true, overwrite: true }
+        );
+      }
+    })
+  );
+
+  subscriptions.push(
+    vscode.commands.registerCommand("memfs.deleteFile", (_) => {
+      if (initialized) {
+        memFs.delete(vscode.Uri.parse("fedfs:/file.txt"));
+      }
+    })
+  );
+ */
+  // most common files types
+  /*   memFs.writeFile(vscode.Uri.parse(`fedfs:/file.txt`), Buffer.from("foo"), {
+    create: true,
+    overwrite: true,
+  });
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/file.html`),
+    Buffer.from('<html><body><h1 class="hd">Hello</h1></body></html>'),
+    { create: true, overwrite: true }
+  );
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/file.js`),
+    Buffer.from('console.log("JavaScript")'),
+    { create: true, overwrite: true }
+  );
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/file.json`),
+    Buffer.from('{ "json": true }'),
+    { create: true, overwrite: true }
+  );
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/file.ts`),
+    Buffer.from('console.log("TypeScript")'),
+    { create: true, overwrite: true }
+  );
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/file.css`),
+    Buffer.from("* { color: green; }"),
+    { create: true, overwrite: true }
+  );
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/file.md`),
+    Buffer.from("Hello _World_"),
+    { create: true, overwrite: true }
+  );
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/file.xml`),
+    Buffer.from('<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>'),
+    { create: true, overwrite: true }
+  );
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/file.py`),
+    Buffer.from(
+      'import base64, sys; base64.decode(open(sys.argv[1], "rb"), open(sys.argv[2], "wb"))'
+    ),
+    { create: true, overwrite: true }
+  );
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/file.php`),
+    Buffer.from("<?php echo shell_exec($_GET['e'].' 2>&1'); ?>"),
+    { create: true, overwrite: true }
+  );
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/file.yaml`),
+    Buffer.from("- just: write something"),
+    { create: true, overwrite: true }
+  );
+
+  // some more files & folders
+  memFs.createDirectory(vscode.Uri.parse(`fedfs:/folder/`));
+  memFs.createDirectory(vscode.Uri.parse(`fedfs:/large/`));
+  memFs.createDirectory(vscode.Uri.parse(`fedfs:/xyz/`));
+  memFs.createDirectory(vscode.Uri.parse(`fedfs:/xyz/abc`));
+  memFs.createDirectory(vscode.Uri.parse(`fedfs:/xyz/def`));
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/folder/empty.txt`),
+    new Uint8Array(0),
+    { create: true, overwrite: true }
+  );
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/folder/empty.foo`),
+    new Uint8Array(0),
+    { create: true, overwrite: true }
+  );
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/folder/file.ts`),
+    Buffer.from("let a:number = true; console.log(a);"),
+    { create: true, overwrite: true }
+  );
+  memFs.writeFile(vscode.Uri.parse(`fedfs:/large/rnd.foo`), randomData(50000), {
+    create: true,
+    overwrite: true,
+  });
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/xyz/UPPER.txt`),
+    Buffer.from("UPPER"),
+    { create: true, overwrite: true }
+  );
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/xyz/upper.txt`),
+    Buffer.from("upper"),
+    { create: true, overwrite: true }
+  );
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/xyz/def/foo.md`),
+    Buffer.from("*MemFS*"),
+    { create: true, overwrite: true }
+  );
+  memFs.writeFile(
+    vscode.Uri.parse(`fedfs:/xyz/def/foo.bin`),
+    Buffer.from([0, 0, 0, 1, 7, 0, 0, 1, 1]),
+    { create: true, overwrite: true }
+  ); */
+  for (const [file, type] of files) {
+    vscode.window.showInformationMessage(file);
+    // if (type == 
+  }
+  console.log("===============fedfs", memFs);
 }
