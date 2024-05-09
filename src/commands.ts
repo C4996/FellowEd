@@ -23,9 +23,6 @@ async function getFileMetadata(filePath: string) {
   }
 }
 
-
-
-
 export async function jumpToLine(line: number) {
   const userInput = await vscode.window.showInputBox({
     prompt: "请输入要跳转到的行数",
@@ -110,8 +107,9 @@ export async function startSession(context: vscode.ExtensionContext) {
   );
 
   createWSServer("0.0.0.0", wsServerPort);
-  const doc = createWSClient("localhost", wsServerPort).doc as Doc;
-  const ymap = doc.getMap();
+  const doc = createWSClient("localhost", wsServerPort).doc;
+  const ymap = doc.getMap("files");
+  doc.set
   // ymap.set("index.js", "console.log('Hello, world!');");
   const currentlyOpenedFiles = vscode.workspace.textDocuments;
   for (const file of currentlyOpenedFiles) {
