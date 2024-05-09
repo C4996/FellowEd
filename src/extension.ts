@@ -3,7 +3,6 @@
 import * as vscode from "vscode";
 import { getAllUsers, helloWorld, joinSession, jumpToLine, showFileInfo, startSession } from "./commands";
 import { openChatView,testMsgFunction } from "./webview/webview";
-import { getAllUsers, helloWorld, joinSession, jumpToLine, showFileInfo, startSession } from "./commands.js";
 import { userListActivate } from "./client/treeview";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
