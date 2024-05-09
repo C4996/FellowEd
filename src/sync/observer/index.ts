@@ -1,5 +1,6 @@
 import { FellowFS, File, Directory } from "../../fs/provider";
 import * as vscode from "vscode";
+import { resolvePath } from "../../fs/resolver";
 
 // import type { Doc as YDoc, Map as YMap } from "yjs";
 type YDoc = any;
@@ -7,35 +8,84 @@ type YMap = any;
 
 const encoder = new TextEncoder();
 
-export function observe(doc: YDoc, fs: FellowFS) {
+export function observe(
+  doc: YDoc,
+  fs: vscode.FileSystemProvider | vscode.FileSystem,
+  isClient = true
+) {
   const yFilesMap = doc.getMap("files");
   const yCursorsMap = doc.getMap("cursors");
   console.info("=======yarr", yCursorsMap);
   // Initialize the virtual workspace
   // create virtual files for each key in the ymap
   for (const path in yFilesMap.keys) {
-    const filename = path.split("/")?.at(-1);
-    if (!filename) {
-      continue;
-    }
-    console.info("=======yfilenmae", { filename });
-    fs.writeFile(vscode.Uri.parse(`fedfs:/${filename}`), new Uint8Array(), {
+    console.info("=======ypath", { path });
+    fs.writeFile(resolvePath(path, isClient), new Uint8Array(), {
       create: true,
       overwrite: true,
     });
   }
   yFilesMap.observe((event) => {
     console.log("========yjs", { event });
-    for (const filename of event.keysChanged) {
-      console.log("========yjs file changed:", { filename });
-      const textContent = yFilesMap.get(filename);
+
+    /*     const allTabsUris = vscode.window.tabGroups.all.flatMap(({ tabs }) =>
+      tabs.map((tab) => {
+        if (
+          tab.input instanceof vscode.TabInputText ||
+          tab.input instanceof vscode.TabInputNotebook
+        ) {
+          return tab.input.uri;
+        }
+
+        if (
+          tab.input instanceof vscode.TabInputTextDiff ||
+          tab.input instanceof vscode.TabInputNotebookDiff
+        ) {
+          return tab.input.original; // also can use modified
+        }
+
+        // others tabs e.g. Settings or webviews don't have URI
+        return null!;
+      })
+    ); */
+    if (event.transaction.local) {
+      return;
+    }
+
+    for (const path of event.keysChanged) {
+      if (path?.endsWith(".git")) {
+        continue;
+      }
+      if (yFilesMap.get(path).from === (isClient ? "client" : "host")) {
+        return;
+      }
+      console.log("========yjs file changed:", { path });
+      const textContent = yFilesMap.get(path).content;
       console.log("========yjs file content:", { textContent });
-      const uri = vscode.Uri.parse(`fedfs:/${filename}`);
-      fs.writeFile(uri, encoder.encode(textContent as string), {
-        create: true,
-        overwrite: true,
-      });
-      vscode.window.showTextDocument(uri);
+      const uri = resolvePath(path, isClient);
+
+      if (
+        vscode.window.activeTextEditor.document.uri.toString().endsWith(path)
+      ) {
+        const editorText = vscode.window.activeTextEditor.document.getText();
+        if (textContent !== editorText) {
+          vscode.window.activeTextEditor.edit((editBuilder) => {
+            editBuilder.replace(
+              new vscode.Range(
+                new vscode.Position(0, 0),
+                new vscode.Position(Number.MAX_VALUE, Number.MAX_VALUE)
+              ),
+              textContent as string
+            );
+          });
+        }
+      } else {
+        fs.writeFile(uri, encoder.encode(textContent as string), {
+          create: true,
+          overwrite: true,
+        });
+        vscode.window.showTextDocument(uri);
+      }
     }
   });
 }

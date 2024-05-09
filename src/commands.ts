@@ -11,6 +11,18 @@ import { observe } from "./sync/observer";
 import { FellowFS } from "./fs/provider";
 import { ExtensionContext } from "./context";
 import { listDir } from "./fs/workspace";
+import { clientUri2Path, hostUri2Path } from "./fs/resolver";
+
+function throttle<T extends (...args: any[]) => any>(fn: T, ms = 200) {
+  let last = 0;
+  return function (...args: Parameters<T>) {
+    const now = Date.now();
+    if (now - last > ms) {
+      last = now;
+      fn(...args);
+    }
+  };
+}
 
 // import { promisify } from "util"; // Node.js now has fs/promises, so we don't need this anymore
 async function getFileMetadata(filePath: string) {
@@ -134,16 +146,35 @@ export async function startSession() {
   // ymap.set("index.js", "console.log('Hello, world!');");
   const currentlyOpenedFiles = vscode.workspace.textDocuments;
   for (const file of currentlyOpenedFiles) {
-    ymap.set(file.fileName, file.getText());
+    const p = hostUri2Path(file.fileName);
+    ymap.set(p, {
+      content: file.getText(),
+      from: "host",
+    });
   }
   const subscriptions = [
     vscode.workspace.onDidOpenTextDocument((document) => {
-      ymap.set(document.fileName, document.getText());
+      const text = document.getText();
+      const p = hostUri2Path(document.fileName);
+      ymap.get(p) === text ||
+        ymap.set(p, {
+          content: text,
+          from: "host",
+        });
     }),
-    vscode.workspace.onDidChangeTextDocument((event) => {
-      ymap.set(event.document.fileName, event.document.getText());
-    }),
+    vscode.workspace.onDidChangeTextDocument(
+      throttle((event) => {
+        const text = event.document.getText();
+        const p = hostUri2Path(event.document.fileName);
+        ymap.get(p) === text ||
+          ymap.set(p, {
+            content: text,
+            from: "host",
+          });
+      })
+    ),
   ];
+  observe(doc, vscode.workspace.fs, false);
 }
 
 function randomData(lineCnt: number, lineLen = 155): Buffer {
@@ -219,6 +250,7 @@ export async function joinSession() {
   while (!vscode.workspace.workspaceFolders) {
     await sleep(500);
   }
+  await sleep(3000);
   /*
   subscriptions.push(
     vscode.commands.registerCommand("memfs.reset", (_) => {
@@ -378,7 +410,21 @@ export async function joinSession() {
   }
 
   console.log("===============fedfs", memFs);
-
+  const ymap = wsclient.doc.getMap("files");
+  const subscriptions = [
+    vscode.workspace.onDidOpenTextDocument((document) => {
+      const p = clientUri2Path(document.uri);
+      const text = document.getText();
+      ymap.get(p) === text || ymap.set(p, { content: text, from: "client" });
+    }),
+    vscode.workspace.onDidChangeTextDocument(
+      throttle((event) => {
+        const p = clientUri2Path(event.document.uri);
+        const text = event.document.getText();
+        ymap.get(p) === text || ymap.set(p, { content: text, from: "client" });
+      })
+    ),
+  ];
   await sleep(2500);
   observe(wsclient.doc, memFs);
 }
