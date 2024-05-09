@@ -1,12 +1,13 @@
 import { publicProcedure, router } from "./trpc";
 import { fileQuery } from "../schema/fileInfo";
 import { selectedContent, UserComment } from "../schema/userComment";
-import { getAllUsers } from "./routes/user";
+import { getAllUsers, joinSession } from "./routes/user";
 import { tryConnect } from "./routes/connect";
 
 export const appRouter = router({
   tryConnect,
   getAllUsers,
+  joinSession,
   getFileInfo: publicProcedure.input(fileQuery).query(async (opts) => {
     const { filePath } = opts.input;
     return {

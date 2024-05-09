@@ -3,11 +3,13 @@
 import * as vscode from "vscode";
 import { getAllUsers, helloWorld, joinSession, jumpToLine, showFileInfo, startSession } from "./commands";
 import { openChatView,testMsgFunction } from "./webview/webview";
+import { getAllUsers, helloWorld, joinSession, jumpToLine, showFileInfo, startSession } from "./commands.js";
+import { userListActivate } from "./client/treeview";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "fellowed" is now active!');
-
+  userListActivate(context);
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
@@ -26,7 +28,7 @@ export function activate(context: vscode.ExtensionContext) {
     ),
     vscode.commands.registerCommand(
       "fellowed.startSession",
-      startSession
+      (context) => startSession(context)
     ),
     vscode.commands.registerCommand(
       "fellowed.getAllUsers",
@@ -43,6 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
       testMsgFunction
     ),
   ];
+
   commands.forEach((value) => context.subscriptions.push(value));
 }
 
