@@ -20,6 +20,9 @@ async function getFileMetadata(filePath: string) {
   }
 }
 
+
+
+
 export async function jumpToLine(line: number) {
   const userInput = await vscode.window.showInputBox({
     prompt: "请输入要跳转到的行数",

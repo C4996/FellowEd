@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import { getAllUsers, helloWorld, joinSession, jumpToLine, showFileInfo, startSession } from "./commands";
-
+import { openChatView } from "./webview/webview";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -31,6 +31,12 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "fellowed.getAllUsers",
       getAllUsers,
+    ),
+    vscode.commands.registerCommand(
+      "fellowed.openChatView",
+      () => {
+        openChatView(context);
+      }
     )
   ];
   commands.forEach((value) => context.subscriptions.push(value));
