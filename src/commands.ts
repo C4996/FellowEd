@@ -125,6 +125,24 @@ export async function startSession(context: vscode.ExtensionContext) {
     "HTTP Server created! port is " + httpServerPort
   );
 
+  createWSServer("0.0.0.0", wsServerPort);
+  const doc = createWSClient("localhost", wsServerPort).doc;
+  const ymap = doc.getMap("files");
+  doc.set;
+  // ymap.set("index.js", "console.log('Hello, world!');");
+  const currentlyOpenedFiles = vscode.workspace.textDocuments;
+  for (const file of currentlyOpenedFiles) {
+    ymap.set(file.fileName, file.getText());
+  }
+  const subscriptions = [
+    vscode.workspace.onDidOpenTextDocument((document) => {
+      ymap.set(document.fileName, document.getText());
+    }),
+    vscode.workspace.onDidChangeTextDocument((event) => {
+      ymap.set(event.document.fileName, event.document.getText());
+    }),
+  ];
+  // context.subscriptions.push(...subscriptions);
   // createWSServer("0.0.0.0", wsServerPort);
   // const doc = createWSClient("localhost", wsServerPort).doc as Doc;
   // const ymap = doc.getMap();

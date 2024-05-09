@@ -1,4 +1,5 @@
 {
+  "exclude": ["src/webview/Chatview"],
   "compilerOptions": {
     "module": "NodeNext",
     "target": "ES2022",
