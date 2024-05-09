@@ -40,6 +40,10 @@
       {
         "command": "fellowed.openChatView",
         "title": "Fellowed: open chat view"
+      },
+      {
+        "command": "fellowed.testMsgFunction",
+        "title": "Fellowed: test msg function"
       }
     ]
   },
