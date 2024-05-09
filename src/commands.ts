@@ -160,8 +160,8 @@ function randomData(lineCnt: number, lineLen = 155): Buffer {
   return Buffer.from(lines.join("\n"), "utf8");
 }
 
-async function sleep (ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+async function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export async function joinSession() {
@@ -206,8 +206,6 @@ export async function joinSession() {
 
   const wsclient = createWSClient(ip, port + 1);
 
-  observe(wsclient.doc);
-
   const memFs = ExtensionContext.getInstance().fs;
   if (!memFs) {
     vscode.window.showErrorMessage("FS not initialized!");
@@ -219,8 +217,7 @@ export async function joinSession() {
   });
 
   while (!vscode.workspace.workspaceFolders) {
-    console.log("========fedfs", vscode.workspace.workspaceFolders);
-    await sleep(200);
+    await sleep(500);
   }
   /*
   subscriptions.push(
@@ -361,10 +358,14 @@ export async function joinSession() {
     // vscode.window.showInformationMessage(file);
     switch (type) {
       case vscode.FileType.File:
-        memFs.writeFile(vscode.Uri.parse(`fedfs:/${file}`), Buffer.from("foo"), {
-          create: true,
-          overwrite: true,
-        });
+        memFs.writeFile(
+          vscode.Uri.parse(`fedfs:/${file}`),
+          Buffer.from("foo"),
+          {
+            create: true,
+            overwrite: true,
+          }
+        );
         break;
 
       case vscode.FileType.Directory:
@@ -375,5 +376,9 @@ export async function joinSession() {
         break;
     }
   }
+
   console.log("===============fedfs", memFs);
+
+  await sleep(2500);
+  observe(wsclient.doc, memFs);
 }
