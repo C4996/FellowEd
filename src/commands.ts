@@ -23,8 +23,24 @@ async function getFileMetadata(filePath: string) {
   }
 }
 
+export async function openTab(filePath: string) {
+  try {
+    const doc = await vscode.workspace.openTextDocument(filePath);
+    await vscode.window.showTextDocument(doc);
+  } catch (error) {
+    vscode.window.showErrorMessage(`Error: ${error}`);
+  }
+}
 
-
+export async function closeTab() {
+  const editor = vscode.window.activeTextEditor;
+  if (editor) {
+    const doc = editor.document;
+    await vscode.commands.executeCommand("workbench.action.closeActiveEditor");
+  } else {
+    vscode.window.showErrorMessage("No active editor found.");
+  }
+}
 
 export async function jumpToLine(line: number) {
   const userInput = await vscode.window.showInputBox({
@@ -109,29 +125,29 @@ export async function startSession(context: vscode.ExtensionContext) {
     "HTTP Server created! port is " + httpServerPort
   );
 
-  createWSServer("0.0.0.0", wsServerPort);
-  const doc = createWSClient("localhost", wsServerPort).doc as Doc;
-  const ymap = doc.getMap();
-  // ymap.set("index.js", "console.log('Hello, world!');");
-  const currentlyOpenedFiles = vscode.workspace.textDocuments;
-  for (const file of currentlyOpenedFiles) {
-    ymap.set(file.fileName, file.getText());
-  }
-  const subscriptions = [
-    vscode.workspace.onDidOpenTextDocument((document) => {
-      ymap.set(document.fileName, document.getText());
-    }),
-    vscode.workspace.onDidChangeTextDocument((event) => {
-      ymap.set(event.document.fileName, event.document.getText());
-    }),
-  ];
-  // context.subscriptions.push(...subscriptions);
+  // createWSServer("0.0.0.0", wsServerPort);
+  // const doc = createWSClient("localhost", wsServerPort).doc as Doc;
+  // const ymap = doc.getMap();
+  // // ymap.set("index.js", "console.log('Hello, world!');");
+  // const currentlyOpenedFiles = vscode.workspace.textDocuments;
+  // for (const file of currentlyOpenedFiles) {
+  //   ymap.set(file.fileName, file.getText());
+  // }
+  //   const subscriptions = [
+  //     vscode.workspace.onDidOpenTextDocument((document) => {
+  //       ymap.set(document.fileName, document.getText());
+  //     }),
+  //     vscode.workspace.onDidChangeTextDocument((event) => {
+  //       ymap.set(event.document.fileName, event.document.getText());
+  //     }),
+  //   ];
+  //   // context.subscriptions.push(...subscriptions);
 
-  vscode.window.showInformationMessage(
-    "WebSocket Server created! port is " + wsServerPort
-  );
+  //   vscode.window.showInformationMessage(
+  //     "WebSocket Server created! port is " + wsServerPort
+  //   );
 
-  vscode.window.showInformationMessage("Session created! port is " + port);
+  //   vscode.window.showInformationMessage("Session created! port is " + port);
 }
 
 export async function joinSession() {

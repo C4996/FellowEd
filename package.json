@@ -18,6 +18,14 @@
         "title": "FellowEd: Hello World"
       },
       {
+        "command": "fellowed.openTab",
+        "title": "Fellowed: open tab"
+      },
+      {
+        "command": "fellowed.closeTab",
+        "title": "FellowEd: close tab"
+      },
+      {
         "command": "fellowed.scrollToLine",
         "title": "FellowEd: scroll to Line"
       },
