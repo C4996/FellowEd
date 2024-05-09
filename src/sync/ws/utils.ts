@@ -9,8 +9,8 @@ const map = require("lib0/map");
 // const debounce = require("lodash.debounce");
 import debounce from "lodash.debounce";
 
-const callbackHandler = require("./callback.cjs").callbackHandler;
-const isCallbackSet = require("./callback.cjs").isCallbackSet;
+const callbackHandler = require("./callback.js").callbackHandler;
+const isCallbackSet = require("./callback.js").isCallbackSet;
 
 const CALLBACK_DEBOUNCE_WAIT = parseInt(
   process.env.CALLBACK_DEBOUNCE_WAIT || "2000"

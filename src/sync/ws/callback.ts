@@ -15,7 +15,7 @@ exports.isCallbackSet = !!CALLBACK_URL;
 /**
  * @param {Uint8Array} update
  * @param {any} origin
- * @param {import('./utils.cjs').WSSharedDoc} doc
+ * @param {import('./utils.js').WSSharedDoc} doc
  */
 exports.callbackHandler = (update, origin, doc) => {
   const room = doc.name;
@@ -67,8 +67,8 @@ const callbackRequest = (url, timeout, data) => {
 
 /**
  * @param {string} objName
- * @param {string} objType
- * @param {import('./utils.cjs').WSSharedDoc} doc
+ * @param {string} objTy.cjspe
+ * @param {import('./utils.js').WSSharedDoc} doc
  */
 const getContent = (objName, objType, doc) => {
   switch (objType) {
