@@ -3,7 +3,7 @@
 > 结对编程好帮手
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/SAWARATSUKI/ServiceLogos/main/VisualStudioCode/VisualStudioCode.png" width="500px">
+<img src="https://github.com/C4996/FellowEd/assets/20166026/c0b9b235-fdb5-47ed-8f14-ba3eb36d609c" width="300px">
 </p>
 
 ## 环境配置
@@ -32,7 +32,7 @@ npm i -g pnpm
 
 使用 <kbd>F5</kbd> 开始调试。
 
-为了测试通信，推荐同时打开两个 VS Code 工作区。
+为了测试通信，推荐同时打开两个 VS Code 工作区。为方便起见，可以同时使用 Code 和 Code Insiders。
 
 ## 仓库管理
 
@@ -40,11 +40,9 @@ npm i -g pnpm
 
 ### 贡献
 
-#### 格式化
-
-- 请尽量避免对已有代码 l的未大幅更改的部分进行重新格式化。
-
-- [ ] 我们会在之后设置 lint 规范以及相应的 CI 检查。
+- 请尽量避免对已有代码的未大幅更改的部分进行重新格式化。
+- 使用 eslint 进行代码风格检查。
+- 遵循 [semantic commit message](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716) 规范。
 
 #### 创建 PR
 
