@@ -1,22 +1,18 @@
 <script setup lang="ts">
-
+import { ref } from 'vue';
+let content = ref('');
 
 </script>
 
 
 <template>
-    <container id="chat-input-box">
+    <!-- <container>
         <textarea></textarea>
         <button>Send</button>
-    </container>
-    
+    </container> -->
+    <v-container id="chat-input-box">
+        <v-text-field v-model="content" label="Type your message here" outlined></v-text-field>
+    </v-container>
 </template>
 
-<style>
-#chat-input-box {
-    display: flex;
-    gap: 1em;
-    padding: 1em;
-    background-color: dimgrey;
-}
-</style>
+<style></style>
