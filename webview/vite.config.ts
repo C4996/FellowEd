@@ -7,7 +7,7 @@ export default defineConfig({
   base : './',
   plugins: [vue()],
   build: {
-    outDir: path.resolve(__dirname, '../../../out/static/webview'),
+    outDir: path.resolve(__dirname, '../out/static/webview'),
     emptyOutDir: true,
     rollupOptions: {
       output: {
