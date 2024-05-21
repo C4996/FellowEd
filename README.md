@@ -28,6 +28,10 @@ npm i -g pnpm
 
 初次 `git clone` 仓库，以及每次 `git pull` 之后，请务必注意使用 `pnpm i` 安装/更新依赖，否则可能会出现很多难以发现原因的报错。
 
+### Webview
+
+在根目录的 `webview` 中，运行 `pnpm install` 安装依赖。`pnpm build` 构建。
+
 ## 调试
 
 使用 <kbd>F5</kbd> 开始调试。

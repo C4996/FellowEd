@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { msgHandler } from '../message';
 import * as path from 'path';
 import { message, Message } from '../schema/chat';
+import { ExtensionContext } from '../context';
 
 
 let webviewPanel: vscode.WebviewPanel | undefined;
@@ -36,7 +37,9 @@ function getChatViewHTML(jsUrl: vscode.Uri, cssUrl: vscode.Uri) {
 }
 
 
-export function openChatView(context: vscode.ExtensionContext) {
+export function openChatView() {
+    const ctx = ExtensionContext.getInstance();
+    const context = ctx.ext;
     const panel = vscode.window.createWebviewPanel(
         "chatView",
         "Chat",

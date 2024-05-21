@@ -1,5 +1,5 @@
 {
-  "exclude": ["./src/webview/**"],
+  "exclude": ["./webview/**"],
   "compilerOptions": {
     "module": "NodeNext",
     "target": "ES2022",
