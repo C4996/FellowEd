@@ -26,8 +26,6 @@ export function observe(
     });
   }
   yFilesMap.observe((event) => {
-    console.log("========yjs", { event });
-
     /*     const allTabsUris = vscode.window.tabGroups.all.flatMap(({ tabs }) =>
       tabs.map((tab) => {
         if (
@@ -48,6 +46,7 @@ export function observe(
         return null!;
       })
     ); */
+    console.log("=====yjs is local", event.transaction.local, event.transaction.origin, event.keysChanged);
     if (event.transaction.local) {
       return;
     }
@@ -56,9 +55,9 @@ export function observe(
       if (path?.endsWith(".git")) {
         continue;
       }
-      if (yFilesMap.get(path).from === (isClient ? "client" : "host")) {
-        return;
-      }
+      // if (yFilesMap.get(path).from === (isClient ? "client" : "host")) {
+      //   return;
+      // }
       console.log("========yjs file changed:", { path });
       const textContent = yFilesMap.get(path).content;
       console.log("========yjs file content:", { textContent });

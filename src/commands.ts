@@ -13,7 +13,7 @@ import { ExtensionContext } from "./context";
 import { listDir } from "./fs/workspace";
 import { clientUri2Path, hostUri2Path } from "./fs/resolver";
 
-function throttle<T extends (...args: any[]) => any>(fn: T, ms = 200) {
+function throttle<T extends (...args: any[]) => any>(fn: T, ms = 0) {
   let last = 0;
   return function (...args: Parameters<T>) {
     const now = Date.now();
@@ -149,7 +149,7 @@ export async function startSession() {
     const p = hostUri2Path(file.fileName);
     ymap.set(p, {
       content: file.getText(),
-      from: "host",
+      // from: "host",
     });
   }
   const subscriptions = [
@@ -159,36 +159,30 @@ export async function startSession() {
       ymap.get(p) === text ||
         ymap.set(p, {
           content: text,
-          from: "host",
+          // from: "host",
         });
     }),
     vscode.workspace.onDidChangeTextDocument(
       throttle((event) => {
         const text = event.document.getText();
         const p = hostUri2Path(event.document.fileName);
-        ymap.get(p) === text ||
+        const textInY = ymap.get(p)["content"];
+        console.log("===didChange host", {
+          p,
+          text,
+          textInY,
+          eq: textInY === text,
+          changes: event.contentChanges, // TextDocumentContentChangeEvent
+        });
+        textInY === text ||
           ymap.set(p, {
             content: text,
-            from: "host",
+            // from: "host",
           });
       })
     ),
   ];
   observe(doc, vscode.workspace.fs, false);
-}
-
-function randomData(lineCnt: number, lineLen = 155): Buffer {
-  const lines: string[] = [];
-  for (let i = 0; i < lineCnt; i++) {
-    let line = "";
-    while (line.length < lineLen) {
-      line += Math.random()
-        .toString(2 + (i % 34))
-        .substr(2);
-    }
-    lines.push(line.substr(0, lineLen));
-  }
-  return Buffer.from(lines.join("\n"), "utf8");
 }
 
 async function sleep(ms: number) {
@@ -384,20 +378,15 @@ export async function joinSession() {
     Buffer.from([0, 0, 0, 1, 7, 0, 0, 1, 1]),
     { create: true, overwrite: true }
   ); */
-  // [[".git",2],[".gitignore",1],["AFM仿真",2],["NumUtil.hi",1],["NumUtil.hs",1],["README.md",1],["作图纸.pdf",1],["双棱镜和劳埃镜干涉",2],["巨磁阻效应",2],["氢原子光谱",2],["磁光效应",2],["稳态法",2],["迈克尔逊干涉",2],["阿贝成像",2]]
   for (const [file, type] of files) {
     console.log("===============fedfs", file, type);
     // vscode.window.showInformationMessage(file);
     switch (type) {
       case vscode.FileType.File:
-        memFs.writeFile(
-          vscode.Uri.parse(`fedfs:/${file}`),
-          Buffer.from("foo"),
-          {
-            create: true,
-            overwrite: true,
-          }
-        );
+        memFs.writeFile(vscode.Uri.parse(`fedfs:/${file}`), Buffer.from(""), {
+          create: true,
+          overwrite: true,
+        });
         break;
 
       case vscode.FileType.Directory:
@@ -415,13 +404,23 @@ export async function joinSession() {
     vscode.workspace.onDidOpenTextDocument((document) => {
       const p = clientUri2Path(document.uri);
       const text = document.getText();
-      ymap.get(p) === text || ymap.set(p, { content: text, from: "client" });
+      ymap.get(p) === text ||
+        ymap.set(p, {
+          content: text,
+          // from: "client",
+        });
     }),
     vscode.workspace.onDidChangeTextDocument(
       throttle((event) => {
         const p = clientUri2Path(event.document.uri);
         const text = event.document.getText();
-        ymap.get(p) === text || ymap.set(p, { content: text, from: "client" });
+        const textInY = ymap.get(p)["content"];
+        console.log("===didChange", { p, text, textInY, eq: textInY === text });
+        textInY === text ||
+          ymap.set(p, {
+            content: text,
+            // from: "client",
+          });
       })
     ),
   ];
