@@ -140,6 +140,9 @@ export async function startSession() {
     "FellowEd server created! port is " + httpServerPort
   );
 
+  // TODO: 创建 / 读取 .vscode/fellowed.db 文件，存储当前会话的信息
+  // TODO: 保存当前用户的信息到 user 表
+
   createWSServer("0.0.0.0", wsServerPort);
   const doc = createWSClient("localhost", wsServerPort).doc;
   const ymap = doc.getMap("files");
