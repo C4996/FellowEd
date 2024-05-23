@@ -149,7 +149,7 @@ export async function startSession() {
   createWSServer("0.0.0.0", wsServerPort);
   const doc = createWSClient("localhost", wsServerPort).doc;
   const ymap = doc.getMap("files");
-  // ymap.set("index.js", "console.log('Hello, world!');");
+  const yCursorMap = doc.getMap("cursors");
   const currentlyOpenedFiles = vscode.workspace.textDocuments;
   for (const file of currentlyOpenedFiles) {
     const p = hostUri2Path(file.fileName);
@@ -187,6 +187,9 @@ export async function startSession() {
           });
       })
     ),
+    vscode.window.onDidChangeTextEditorSelection((event) => {
+      console.log(event);
+    }),
   ];
   observe(doc, vscode.workspace.fs, false);
 }
@@ -393,7 +396,6 @@ export async function joinSession() {
   ); */
   for (const [file, type] of files) {
     console.log("===============fedfs", file, type);
-    // vscode.window.showInformationMessage(file);
     switch (type) {
       case vscode.FileType.File:
         memFs.writeFile(vscode.Uri.parse(`fedfs:/${file}`), Buffer.from(""), {
