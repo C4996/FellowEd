@@ -10,9 +10,9 @@ const props = defineProps({
 
 
 <template>
-    <p>Hello,this is a message</p>
+    <p>Hallo</p>
     <p>{{ props.msg.user }}</p>
-    <p>{{props.msg.text}}</p>
+    <p>{{ props.msg.text }}</p>
     <br />
 </template>
 

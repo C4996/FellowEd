@@ -64,8 +64,8 @@ export function openChatView() {
     panel.webview.onDidReceiveMessage(msgHandler, undefined, context.subscriptions);
     panel.webview.postMessage({
         command: 'receiveMsgs', msgs: [
-            { text: 'Hello World!', user: 'vscode' },
-            { text: 'Hello World!', user: 'vscode' },
+            { text: '# ABCDE', user: 'vsdde' },
+            { text: '```cpp\nint a = b;\nreturn 0;\n```', user: 'vsxxcode' },
             { text: 'Hello World!', user: 'vscode' }
         ]
     });
