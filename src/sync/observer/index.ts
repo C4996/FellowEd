@@ -50,7 +50,7 @@ export function observe(
     if (event.transaction.local) {
       return;
     }
-
+    const editors = vscode.window.visibleTextEditors;
     for (const path of event.keysChanged) {
       if (path?.endsWith(".git")) {
         continue;
@@ -63,12 +63,11 @@ export function observe(
       console.log("========yjs file content:", { textContent });
       const uri = resolvePath(path, isClient);
 
-      if (
-        vscode.window.activeTextEditor.document.uri.toString().endsWith(path)
-      ) {
-        const editorText = vscode.window.activeTextEditor.document.getText();
+      const editor = editors.find((editor) => editor.document.uri.toString() === uri.toString());
+      if (editor) {
+        const editorText = editor.document.getText();
         if (textContent !== editorText) {
-          vscode.window.activeTextEditor.edit((editBuilder) => {
+          editor.edit((editBuilder) => {
             editBuilder.replace(
               new vscode.Range(
                 new vscode.Position(0, 0),
