@@ -236,7 +236,8 @@ export async function joinSession() {
     }
   } catch (error) {
     Config.getInstance().trpc = undefined;
-    vscode.window.showErrorMessage("Trpc Error: " + error);
+    vscode.window.showErrorMessage(`无法加入位于 ${ip}:${port} 的主机。`);
+    console.log("Trpc Error: " + error);
     return;
   }
 
