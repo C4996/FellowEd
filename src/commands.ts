@@ -11,6 +11,7 @@ import { observe } from "./sync/observer";
 import { FellowFS } from "./fs/provider";
 import { ExtensionContext } from "./context";
 import { listDir } from "./fs/workspace";
+import * as os from 'os';
 import { clientUri2Path, hostUri2Path } from "./fs/resolver";
 
 function throttle<T extends (...args: any[]) => any>(fn: T, ms = 0) {
@@ -139,6 +140,8 @@ export async function startSession() {
   vscode.window.showInformationMessage(
     "FellowEd server created! port is " + httpServerPort
   );
+  console.log("FellowEd server created! port is " + httpServerPort);
+  Config.getInstance().statusBarItem.text = `FellowEd: Server at ${httpServerPort}`;
 
   // TODO: 创建 / 读取 .vscode/fellowed.db 文件，存储当前会话的信息
   // TODO: 保存当前用户的信息到 user 表
@@ -218,20 +221,27 @@ export async function joinSession() {
   try {
     const trpc = newTRPC(ip, port).trpc;
     Config.getInstance().trpc = trpc;
-    vscode.window.showInformationMessage("Join session at " + ip + ":" + port);
+    vscode.window.showInformationMessage(`正在尝试加入位于 ${ip}:${port} 的主机...`);
     const resp = await trpc.joinSession.mutate({
       machineId: vscode.env.machineId,
       name: "Anonymous",
       email: "example@gmail.com",
     });
-    vscode.window.showInformationMessage(JSON.stringify(resp));
-    files = resp.files;
+    if (resp.success === false) {
+      vscode.window.showErrorMessage(`无法加入位于 ${ip}:${port} 的主机。`);
+      return;
+    } else {
+      vscode.window.showInformationMessage(`成功加入位于 ${ip}:${port} 的主机。`);
+      files = resp.files;
+    }
   } catch (error) {
     Config.getInstance().trpc = undefined;
-    vscode.window.showErrorMessage("Error: " + error);
+    vscode.window.showErrorMessage(`无法加入位于 ${ip}:${port} 的主机。`);
+    console.log("Trpc Error: " + error);
     return;
   }
 
+  Config.getInstance().statusBarItem.text = `FellowEd: ${ip}:${port}`;
   const wsclient = createWSClient(ip, port + 1);
 
   const memFs = ExtensionContext.getInstance().fs;
@@ -429,4 +439,21 @@ export async function joinSession() {
   ];
   await sleep(2500);
   observe(wsclient.doc, memFs);
+}
+
+
+export async function showAvailableIP() {
+  const networkInterfaces = os.networkInterfaces();
+  const print = vscode.window.showInformationMessage;
+  for (const ifacename in networkInterfaces) {
+    const iface = networkInterfaces[ifacename];
+    if (iface) {
+      for (const net of iface) {
+        if (!net.internal && net.family === 'IPv4') {
+          // 找到活跃网卡的 IPv4 地址并显示
+          print(`${ifacename}: ${net.address}`);
+        }
+      }
+    }
+  }
 }
