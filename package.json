@@ -52,6 +52,10 @@
       {
         "command": "fellowed.testMsgFunction",
         "title": "Fellowed: test msg function"
+      },
+      {
+        "command": "fellowed.showAvailableIP",
+        "title": "Fellowed: Show available IP"
       }
     ],
     "views": {
@@ -93,13 +97,14 @@
     "@seald-io/nedb": "^4.0.4",
     "@trpc/client": "11.0.0-rc.354",
     "@trpc/server": "11.0.0-rc.354",
+    "better-sqlite3": "^10.0.0",
     "fastify": "^4.26.2",
     "ip-address": "^9.0.5",
     "lib0": "^0.2.93",
     "lodash.debounce": "^4.0.8",
     "pnpm": "^9.0.6",
-    "vue": "^3.4.27",
     "trpc-yjs": "^0.1.0",
+    "vue": "^3.4.27",
     "ws": "^8.17.0",
     "y-protocols": "^1.0.6",
     "y-websocket": "^2.0.2",
