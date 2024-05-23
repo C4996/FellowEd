@@ -10,14 +10,22 @@ import {
   jumpToLine,
   showFileInfo,
   startSession,
+  showAvailableIP
 } from "./commands";
 import { openChatView, testMsgFunction } from "./webview/webview";
 import { userListActivate } from "./client/treeview";
 import { FellowFS } from "./fs/provider";
 import { ExtensionContext } from "./context";
+import { Config } from "./global";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+  statusBarItem.text = "FellowEd: stopped";
+  statusBarItem.show();
+  context.subscriptions.push(statusBarItem);
+  Config.getInstance().statusBarItem = statusBarItem;
+
   console.log('Congratulations, your extension "fellowed" is now active!');
   userListActivate(context);
   const memFs = new FellowFS();
@@ -39,6 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("fellowed.startSession", startSession),
     vscode.commands.registerCommand("fellowed.getAllUsers", getAllUsers),
     vscode.commands.registerCommand("fellowed.openChatView", openChatView),
+    vscode.commands.registerCommand("fellowed.showAvailableIP", showAvailableIP),
     vscode.commands.registerCommand(
       "fellowed.testMsgFunction",
       testMsgFunction

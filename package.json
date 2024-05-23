@@ -52,6 +52,10 @@
       {
         "command": "fellowed.testMsgFunction",
         "title": "Fellowed: test msg function"
+      },
+      {
+        "command": "fellowed.showAvailableIP",
+        "title": "Fellowed: Show available IP"
       }
     ],
     "views": {
