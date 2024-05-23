@@ -52,7 +52,7 @@
   
   // 取消编辑
   const cancelEdit = () => {
-    // 可以添加代码来重置表单或保持当前状态
+    // 可添加代码来重置表单或保持当前状态
     isEditMode.value = false;
   };
   </script>
