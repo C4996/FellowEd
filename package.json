@@ -80,6 +80,7 @@
     "@types/lodash.debounce": "^4.0.9",
     "@types/mocha": "^10.0.6",
     "@types/node": "20.x",
+    "@types/sinon": "^17.0.3",
     "@types/vscode": "^1.87.0",
     "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
@@ -90,6 +91,8 @@
     "css-loader": "^7.1.1",
     "eslint": "^8.56.0",
     "html-loader": "^5.0.0",
+    "mocha": "^10.4.0",
+    "sinon": "^18.0.0",
     "typescript": "^5.4.5",
     "webpack": "^5.91.0"
   },
