@@ -29,9 +29,10 @@ export function activate(context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "fellowed" is now active!');
   userListActivate(context);
   const memFs = new FellowFS();
-  vscode.workspace.registerFileSystemProvider("fedfs", memFs, {
+
+  context.subscriptions.push(vscode.workspace.registerFileSystemProvider("fedfs", memFs, {
     isCaseSensitive: false,
-  });
+  }));
   const ctx = ExtensionContext.getInstance();
   ctx.fs = memFs;
   ctx.ext = context;
@@ -58,4 +59,4 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
