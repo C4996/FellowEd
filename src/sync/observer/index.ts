@@ -64,6 +64,7 @@ export function observe(
       const uri = resolvePath(path, isClient);
 
       const editor = editors.find((editor) => editor.document.uri.toString() === uri.toString());
+      console.log(editor);
       if (editor) {
         const editorText = editor.document.getText();
         if (textContent !== editorText) {

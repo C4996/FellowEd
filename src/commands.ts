@@ -195,8 +195,31 @@ async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function initialize() {
+  vscode.workspace.updateWorkspaceFolders(0, 0, {
+    uri: vscode.Uri.parse("fedfs:/"),
+    name: "FellowEd Workspace",
+  });
+
+  // while (!vscode.workspace.workspaceFolders) {
+  //   await sleep(500);
+  // }
+  // await sleep(3000);
+}
+
 export async function joinSession() {
+  if (vscode.workspace.workspaceFolders) {
+    console.log('already');
+    vscode.workspace.getConfiguration('fellowed.init').update('restart', 'false');
+  } else {
+    console.log('not ready');
+    vscode.workspace.getConfiguration('fellowed.init').update('restart', 'true');
+    initialize();
+  }
+
+
   let ip: string | undefined;
+  let port: number;
   do {
     ip =
       (await vscode.window.showInputBox({
@@ -207,7 +230,6 @@ export async function joinSession() {
       ip = "127.0.0.1";
     }
   } while (!(Address4.isValid(ip!) || Address6.isValid(ip!)));
-  let port: number;
   do {
     let portStr =
       (await vscode.window.showInputBox({
@@ -249,15 +271,7 @@ export async function joinSession() {
     vscode.window.showErrorMessage("FS not initialized!");
     return;
   }
-  vscode.workspace.updateWorkspaceFolders(0, 0, {
-    uri: vscode.Uri.parse("fedfs:/"),
-    name: "FellowEd Workspace",
-  });
-
-  while (!vscode.workspace.workspaceFolders) {
-    await sleep(500);
-  }
-  await sleep(3000);
+  
   /*
   subscriptions.push(
     vscode.commands.registerCommand("memfs.reset", (_) => {

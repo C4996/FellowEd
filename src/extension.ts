@@ -20,6 +20,12 @@ import { Config } from "./global";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  let disposable = vscode.workspace.onDidChangeWorkspaceFolders((event) => {
+    // 处理新工作区的打开逻辑
+    vscode.window.showInformationMessage('New workspace folder(s) opened.');
+  });
+  context.subscriptions.push(disposable);
+  
   const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
   statusBarItem.text = "FellowEd: stopped";
   statusBarItem.show();
@@ -55,6 +61,10 @@ export function activate(context: vscode.ExtensionContext) {
   ];
 
   commands.forEach((value) => context.subscriptions.push(value));
+
+  if (vscode.workspace.getConfiguration('fellowed.init').get('restart') === 'true') {
+    joinSession();
+  }
 }
 
 // This method is called when your extension is deactivated
