@@ -195,8 +195,26 @@ async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function initialize() {
+  ExtensionContext.getInstance().ext.globalState.update('fed-reopen', 'true');
+  vscode.window.showInformationMessage("正在加载工作区，请稍后...");
+  vscode.workspace.updateWorkspaceFolders(0, 0, {
+    uri: vscode.Uri.parse("fedfs:/"),
+    name: "FellowEd Workspace",
+  });
+}
+
 export async function joinSession() {
+  if (ExtensionContext.getInstance().ext.globalState.get('fed-reopen') === 'true') {
+    console.log('fed-reopen is true');
+    ExtensionContext.getInstance().ext.globalState.update('fed-reopen', 'false');
+  } else {
+    await initialize();
+    return;
+  }
+
   let ip: string | undefined;
+  let port: number;
   do {
     ip =
       (await vscode.window.showInputBox({
@@ -207,7 +225,6 @@ export async function joinSession() {
       ip = "127.0.0.1";
     }
   } while (!(Address4.isValid(ip!) || Address6.isValid(ip!)));
-  let port: number;
   do {
     let portStr =
       (await vscode.window.showInputBox({
@@ -253,11 +270,7 @@ export async function joinSession() {
     uri: vscode.Uri.parse("fedfs:/"),
     name: "FellowEd Workspace",
   });
-
-  while (!vscode.workspace.workspaceFolders) {
-    await sleep(500);
-  }
-  await sleep(3000);
+  
   /*
   subscriptions.push(
     vscode.commands.registerCommand("memfs.reset", (_) => {

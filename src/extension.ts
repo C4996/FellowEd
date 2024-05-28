@@ -56,6 +56,13 @@ export function activate(context: vscode.ExtensionContext) {
   ];
 
   commands.forEach((value) => context.subscriptions.push(value));
+
+  if (context.globalState.get('fed-reopen') === 'true') {
+    console.log('fed-reopen === true')
+    setTimeout(async () => {
+      await joinSession();
+    }, 10);
+  }
 }
 
 // This method is called when your extension is deactivated
