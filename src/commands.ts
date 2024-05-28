@@ -196,27 +196,22 @@ async function sleep(ms: number) {
 }
 
 async function initialize() {
+  ExtensionContext.getInstance().ext.globalState.update('fed-reopen', 'true');
+  vscode.window.showInformationMessage("正在加载工作区，请稍后...");
   vscode.workspace.updateWorkspaceFolders(0, 0, {
     uri: vscode.Uri.parse("fedfs:/"),
     name: "FellowEd Workspace",
   });
-
-  // while (!vscode.workspace.workspaceFolders) {
-  //   await sleep(500);
-  // }
-  // await sleep(3000);
 }
 
 export async function joinSession() {
-  if (vscode.workspace.workspaceFolders) {
-    console.log('already');
-    vscode.workspace.getConfiguration('fellowed.init').update('restart', 'false');
+  if (ExtensionContext.getInstance().ext.globalState.get('fed-reopen') === 'true') {
+    console.log('fed-reopen is true');
+    ExtensionContext.getInstance().ext.globalState.update('fed-reopen', 'false');
   } else {
-    console.log('not ready');
-    vscode.workspace.getConfiguration('fellowed.init').update('restart', 'true');
-    initialize();
+    await initialize();
+    return;
   }
-
 
   let ip: string | undefined;
   let port: number;
@@ -271,6 +266,10 @@ export async function joinSession() {
     vscode.window.showErrorMessage("FS not initialized!");
     return;
   }
+  vscode.workspace.updateWorkspaceFolders(0, 0, {
+    uri: vscode.Uri.parse("fedfs:/"),
+    name: "FellowEd Workspace",
+  });
   
   /*
   subscriptions.push(
