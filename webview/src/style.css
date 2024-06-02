@@ -62,7 +62,7 @@ button:focus-visible {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
+  text-align: start;
 }
 
 @media (prefers-color-scheme: light) {
@@ -76,4 +76,49 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* style.css */
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #f0f0f0;
+  color: #333;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-section,
+.hljs-link {
+  color: #c00;
+}
+
+.hljs,
+.hljs-subst {
+  color: #000;
+}
+
+.hljs-title,
+.hljs-name,
+.hljs-type,
+.hljs-attribute,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #080;
+}
+
+.hljs-string,
+.hljs-doctag,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion,
+.hljs-meta {
+  color: #606;
 }
