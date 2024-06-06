@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { SelectedContent, userComment, UserComment } from '../schema/userComments';
+import { SelectedContent, userComment, UserComment } from '../schema/userComment';
 import assert from 'assert';
 
 // 创建Comment类

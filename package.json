@@ -65,8 +65,8 @@
           "name": "FellowEd User List"
         },
         {
-          "id": "comments",
-          "name": "Comments"
+          "id": "commentList",
+          "name": "Comment"
         }
       ]
     }

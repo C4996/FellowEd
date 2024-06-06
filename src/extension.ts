@@ -27,13 +27,13 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(statusBarItem);
   Config.getInstance().statusBarItem = statusBarItem;
 
-  console.log('Congratulations, your extension "fellowed" is now active!');
-  userListActivate(context); // 激活用户列表功能
-  commentListActivate(context); // 激活用户评论功能
   
   console.log('Congratulations, your extension "fellowed" is now active!');
   userListActivate(context);
+  commentListActivate(context); // 激活用户评论功能
   const memFs = new FellowFS();
+
+  
 
   context.subscriptions.push(vscode.workspace.registerFileSystemProvider("fedfs", memFs, {
     isCaseSensitive: false,
