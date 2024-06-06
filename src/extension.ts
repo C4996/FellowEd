@@ -14,6 +14,7 @@ import {
 } from "./commands";
 import { openChatView, testMsgFunction } from "./webview/webview";
 import { userListActivate } from "./client/treeview";
+import { commentListActivate } from "./client/commentTreeView";/////
 import { FellowFS } from "./fs/provider";
 import { ExtensionContext } from "./context";
 import { Config } from "./global";
@@ -26,6 +27,10 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(statusBarItem);
   Config.getInstance().statusBarItem = statusBarItem;
 
+  console.log('Congratulations, your extension "fellowed" is now active!');
+  userListActivate(context); // 激活用户列表功能
+  commentListActivate(context); // 激活用户评论功能
+  
   console.log('Congratulations, your extension "fellowed" is now active!');
   userListActivate(context);
   const memFs = new FellowFS();
