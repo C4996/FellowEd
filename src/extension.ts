@@ -14,7 +14,7 @@ import {
 } from "./commands";
 import { openChatView, testMsgFunction } from "./webview/webview";
 import { userListActivate } from "./client/treeview";
-import { commentListActivate } from "./client/commentTreeView";/////
+import { commentListActivate } from "./client/comment";/////
 import { FellowFS } from "./fs/provider";
 import { ExtensionContext } from "./context";
 import { Config } from "./global";
