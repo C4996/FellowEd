@@ -6,12 +6,12 @@ import { appRouter } from "./server";
 import { Config } from "./global";
 import { Address4, Address6 } from "ip-address";
 import createWSServer from "./sync/ws";
-import createWSClient from "./sync/index";
+import createWSClient, { createText, YText } from "./sync/index";
 import { observe } from "./sync/observer";
-import { FellowFS } from "./fs/provider";
 import { ExtensionContext } from "./context";
 import { listDir } from "./fs/workspace";
 import { clientUri2Path, hostUri2Path } from "./fs/resolver";
+import { vscodeBinding } from "./sync/binding";
 
 function throttle<T extends (...args: any[]) => any>(fn: T, ms = 0) {
   let last = 0;
@@ -185,6 +185,13 @@ export async function startSession() {
       })
     ),
   ];
+  // const type = doc.getText("vsc");
+  // const editor = vscode.window.activeTextEditor;
+  // const binding = new vscodeBinding(
+  //   type,
+  //   vscode.workspace.textDocuments.at(0),
+  //   new Set([editor])
+  // );
   observe(doc, vscode.workspace.fs, false);
 }
 
@@ -402,30 +409,26 @@ export async function joinSession() {
   }
 
   console.log("===============fedfs", memFs);
-  const ymap = wsclient.doc.getMap("files");
+  const ymap = wsclient.doc.getMap<YText>("files");
   const subscriptions = [
     vscode.workspace.onDidOpenTextDocument((document) => {
       const p = clientUri2Path(document.uri);
       const text = document.getText();
-      ymap.get(p) === text ||
-        ymap.set(p, {
-          content: text,
-          // from: "client",
-        });
+      const textFromY = ymap.get(p);
+      textFromY?.toString() === text ||
+        ymap.set(p, createText(text));
     }),
-    vscode.workspace.onDidChangeTextDocument(
-      throttle((event) => {
-        const p = clientUri2Path(event.document.uri);
-        const text = event.document.getText();
-        const textInY = ymap.get(p)["content"];
-        console.log("===didChange", { p, text, textInY, eq: textInY === text });
-        textInY === text ||
-          ymap.set(p, {
-            content: text,
-            // from: "client",
-          });
-      })
-    ),
+    vscode.workspace.onDidChangeTextDocument((event) => {
+      const p = clientUri2Path(event.document.uri);
+      const text = event.document.getText();
+      const ytext = ymap.get(p);
+      if (ytext.toString() !== text) {
+        event.contentChanges.forEach((change) => {
+          ytext.delete(change.rangeOffset, change.rangeLength);
+          ytext.insert(change.rangeOffset, change.text);
+        });
+      }
+    }),
   ];
   await sleep(2500);
   observe(wsclient.doc, memFs);

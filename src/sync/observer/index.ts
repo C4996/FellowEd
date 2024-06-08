@@ -1,10 +1,10 @@
 import { FellowFS, File, Directory } from "../../fs/provider";
 import * as vscode from "vscode";
 import { resolvePath } from "../../fs/resolver";
-
-// import type { Doc as YDoc, Map as YMap } from "yjs";
-type YDoc = any;
-type YMap = any;
+// @ts-nocheck
+import type { Doc as YDoc, Map as YMap } from "yjs";
+// type YDoc = any;
+// type YMap = any;
 
 const encoder = new TextEncoder();
 
@@ -59,7 +59,7 @@ export function observe(
       //   return;
       // }
       console.log("========yjs file changed:", { path });
-      const textContent = yFilesMap.get(path).content;
+      const textContent = yFilesMap.get(path);
       console.log("========yjs file content:", { textContent });
       const uri = resolvePath(path, isClient);
 
@@ -68,6 +68,25 @@ export function observe(
       ) {
         const editorText = vscode.window.activeTextEditor.document.getText();
         if (textContent !== editorText) {
+          event.delta.forEach((op) => {
+            if (op.insert) {
+              vscode.window.activeTextEditor.edit((editBuilder) => {
+                editBuilder.insert(
+                  new vscode.Position(op.pos, 0),
+                  op.insert as string
+                );
+              });
+            } else if (op.delete) {
+              vscode.window.activeTextEditor.edit((editBuilder) => {
+                editBuilder.delete(
+                  new vscode.Range(
+                    new vscode.Position(op.pos, 0),
+                    new vscode.Position(op.pos, op.delete)
+                  )
+                );
+              });
+            }
+          }
           vscode.window.activeTextEditor.edit((editBuilder) => {
             editBuilder.replace(
               new vscode.Range(

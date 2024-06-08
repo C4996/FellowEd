@@ -3,7 +3,6 @@ import db from "../../db";
 import { UserInfo, clientUserInfo } from "../../schema/userInfo";
 import { webcrypto } from "crypto";
 import * as vscode from "vscode";
-import path from "path";
 import { listDir } from "../../fs/workspace";
 
 export const getAllUsers = publicProcedure.query(async () => {

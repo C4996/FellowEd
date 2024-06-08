@@ -1,4 +1,10 @@
-const Y = require("yjs");
+// const Y = require("yjs");
+// @ts-nocheck
+import * as Y from "yjs";
+export type YText = Y.Text;
+export function createText(s: string) {
+  return new Y.Text(s);
+}
 // import { WebsocketProvider } from "y-websocket";
 const { WebsocketProvider } = require("y-websocket");
 import ws from "ws";
